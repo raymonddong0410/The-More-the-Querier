@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './App.css';
 import axios from 'axios';
 
+axios.defaults.baseURL = 'http://localhost:3000';
+
 function App() {
     const [count, setCount] = useState(0);
     const [showRegister, setShowRegister] = useState(false); 
