@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import './App.css';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.baseURL = 'https://themorethequerier.online/backend';
 
 function App() {
-    const [count, setCount] = useState(0);
     const [showRegister, setShowRegister] = useState(false); 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -14,9 +12,9 @@ function App() {
         e.preventDefault();
         try {
             const response = await axios.post('/register', { username, password });
-            console.log(response.data); // Handle successful registration (e.g., show a success message)
+            console.log('Registration successful:', response.data); // Handle successful registration
         } catch (error) {
-            console.error(error); // Handle registration error (e.g., display error message)
+            console.error('Registration error:', error); // Handle registration error
         }
     };
 
@@ -24,15 +22,15 @@ function App() {
         e.preventDefault();
         try {
             const response = await axios.post('/login', { username, password });
-            console.log(response.data); // Handle successful login (e.g., store token, redirect)
+            console.log('Login successful:', response.data); // Handle successful login
         } catch (error) {
-            console.error(error); // Handle login error (e.g., display error message)
+            console.error('Login error:', error); // Handle login error
         }
     };
 
     return (
         <div className="App">
-            <h1>Vite + React</h1>
+            <h1>My Application</h1>
 
             {showRegister ? (
                 <form onSubmit={handleRegister}>
@@ -87,12 +85,6 @@ function App() {
                     </button>
                 </form>
             )}
-
-            <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>
-                    count is {count}
-                </button>
-            </div>
         </div>
     );
 }
