@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import {BrowserRouter as Router, Routes, Route, useNavigate} from 'react-router-dom';
 
-axios.defaults.baseURL = 'https://themorethequerier.online/backend';
+// axios.defaults.baseURL = 'https://themorethequerier.online/backend';
+axios.defaults.baseURL = 'http://localhost:3000/backend';
 
 function App() {
     return (

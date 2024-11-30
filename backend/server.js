@@ -69,7 +69,11 @@ function initializeApp() {
     createTables();
 
     app.use(cors({
-        origin: 'https://themorethequerier.online', // Allow requests only from your frontend
+        origin: [
+            'https://themorethequerier.online', // Production frontend
+            'http://localhost:5173' // Local frontend during development
+        ],
+        // origin: 'https://themorethequerier.online', // Allow requests only from your frontend
         methods: ['GET', 'POST'], // Specify allowed HTTP methods
         credentials: true, // Include cookies if needed
     }));
