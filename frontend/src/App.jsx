@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import {BrowserRouter as Router, Routes, Route, useNavigate} from 'react-router-dom';
 
 axios.defaults.baseURL = 'https://themorethequerier.online/backend';
 
 function App() {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<AuthPage />} />
+            </Routes>
+        </Router>
+    );
+}
+
+function AuthPage() {
     const [showRegister, setShowRegister] = useState(false); 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
