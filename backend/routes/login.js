@@ -28,14 +28,14 @@ module.exports = (pool) => {
 
                 // Generate Access Token
                 const token = jwt.sign(
-                    { id: user.id, username: user.username },
+                    { userID: user.userID, username: user.username },
                     process.env.JWT_SECRET,
                     { expiresIn: '1h' }
                 );
 
                 // Generate Refresh Token
                 const refreshToken = jwt.sign(
-                    { id: user.id, username: user.username },
+                    { userID: user.userID, username: user.username },
                     process.env.REFRESH_TOKEN_SECRET,
                     { expiresIn: '7d' } // Longer expiry for refresh token
                 );
