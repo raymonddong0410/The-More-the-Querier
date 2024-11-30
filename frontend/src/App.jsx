@@ -1,91 +1,71 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-
-axios.defaults.baseURL = 'https://themorethequerier.online/backend';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import AuthRoutes from './routes/AuthRoutes';
+import AboutPage from './routes/AboutPage';
+import DashboardPage from './routes/DashboardPage';
+import Navbar from './components/Navbar';
+import { isLoggedIn, logout } from './utils/auth';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
-    const [showRegister, setShowRegister] = useState(false); 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [loading, setLoading] = useState(true); // Prevent flickering during login check
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
+    useEffect(() => {
+        async function checkLoginStatus() {
+            try {
+                const status = await isLoggedIn();
+                setLoggedIn(status);
+            } catch (error) {
+                console.error('Error checking login status:', error);
+                setLoggedIn(false); // Ensure loggedIn is false on error
+            } finally {
+                setLoading(false); // Stop loading state
+            }
+        }
+
+        // Check login status on app load
+        checkLoginStatus();
+    }, []);
+
+    // Logout handler for Navbar
+    const handleLogout = async () => {
         try {
-            const response = await axios.post('/register', { username, password });
-            console.log('Registration successful:', response.data); // Handle successful registration
+            await logout(); // Clear tokens and perform logout
+            setLoggedIn(false); // Update state after logout
         } catch (error) {
-            console.error('Registration error:', error); // Handle registration error
+            console.error('Error during logout:', error);
         }
     };
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post('/login', { username, password });
-            console.log('Login successful:', response.data); // Handle successful login
-        } catch (error) {
-            console.error('Login error:', error); // Handle login error
-        }
-    };
+    if (loading) {
+        // Show a loading state while checking login status
+        return <div>Loading...</div>;
+    }
 
     return (
-        <div className="App">
-            <h1>My Application</h1>
-
-            {showRegister ? (
-                <form onSubmit={handleRegister}>
-                    <h2>Register</h2>
-                    <div>
-                        <label htmlFor="username">Username:</label>
-                        <input
-                            type="text"
-                            id="username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+        <>
+            <Navbar loggedIn={loggedIn} onLogout={handleLogout} />
+            <Routes>
+                {!loggedIn ? (
+                    <Route path="/" element={<AuthRoutes onLogin={() => setLoggedIn(true)} />} />
+                ) : (
+                    <>
+                        <Route path="/about" element={<AboutPage />} />
+                        <Route
+                            path="/dashboard"
+                            element={
+                                <ProtectedRoute loggedIn={loggedIn}>
+                                    <DashboardPage />
+                                </ProtectedRoute>
+                            }
                         />
-                    </div>
-                    <div>
-                        <label htmlFor="password">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <button type="submit">Register</button>
-                    <button type="button" onClick={() => setShowRegister(false)}>
-                        Already have an account? Login
-                    </button>
-                </form>
-            ) : (
-                <form onSubmit={handleLogin}>
-                    <h2>Login</h2>
-                    <div>
-                        <label htmlFor="username">Username:</label>
-                        <input
-                            type="text"
-                            id="username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="password">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <button type="submit">Login</button>
-                    <button type="button" onClick={() => setShowRegister(true)}>
-                        Create an account
-                    </button>
-                </form>
-            )}
-        </div>
+                    </>
+                )}
+                {/* Fallback route */}
+                <Route path="*" element={<div>404 - Page not found</div>} />
+            </Routes>
+        </>
     );
 }
 
