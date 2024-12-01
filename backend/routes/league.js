@@ -5,11 +5,7 @@ module.exports = (pool) => {
 
     // Fetch paginated list of leagues
     router.get('/', (req, res) => {
-        const page = parseInt(req.query.page) || 1;
-        const pageSize = 10; // Number of leagues per page
-        const offset = (page - 1) * pageSize;
-
-        pool.query('SELECT * FROM league LIMIT ? OFFSET ?', [pageSize, offset], (err, results) => {
+        pool.query('SELECT * FROM league', (err, results) => {
             if (err) {
                 console.error('Error fetching leagues:', err);
                 return res.status(500).json({ error: 'Failed to fetch leagues.' });
@@ -17,6 +13,7 @@ module.exports = (pool) => {
             res.status(200).json(results);
         });
     });
+    
 
     // Fetch details of a specific league
     router.get('/:id', (req, res) => {

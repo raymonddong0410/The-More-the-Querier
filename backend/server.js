@@ -6,6 +6,7 @@ const { pool, initializeDatabase } = require('./db');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const verifyToken = require('./middleware/verifyToken');
 
 // Middleware
 app.use(cookieParser());
@@ -14,7 +15,7 @@ app.use(cors({
         'http://localhost:5173', // Development frontend
         'https://themorethequerier.online', // Production frontend
     ],
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'DELETE'],
     credentials: true, // Allow cookies to be sent with requests
 }));
 app.use(express.json());
@@ -40,6 +41,9 @@ initializeDatabase(pool)
         app.use('/backend/teamPlayers', require('./routes/getTeamPlayers')(pool));
 
         app.use('/backend/player', require('./routes/getPlayerDetails')(pool));
+
+        app.use('/backend/admin', verifyToken, require('./routes/admin')(pool));
+
 
         // Start the server
         app.listen(port, () => {

@@ -14,9 +14,8 @@ module.exports = () => {
         try {
             const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 
-            // Generate a new authToken
             const newAuthToken = jwt.sign(
-                { userID: payload.userID, username: payload.username },
+                { userID: payload.userID, username: payload.username, isAdmin: payload.isAdmin }, // Include isAdmin
                 process.env.JWT_SECRET,
                 { expiresIn: '1h' }
             );

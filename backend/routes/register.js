@@ -18,38 +18,33 @@ module.exports = (pool) => {
 
             // Insert user into the database
             pool.query(
-                'INSERT INTO users (username, password, fullname, email) VALUES (?, ?, ?, ?)',
-                [username, hashedPassword, fullname, email],
+                'INSERT INTO users (username, password, fullname, email, isAdmin) VALUES (?, ?, ?, ?, ?)',
+                [username, hashedPassword, fullname, email, false], // Default isAdmin to false
                 (err, results) => {
                     if (err) {
                         if (err.code === 'ER_DUP_ENTRY') {
-                            // Handle duplicate username error
                             return res.status(400).json({ error: 'Username already exists' });
                         }
                         console.error('Database error:', err);
                         return res.status(500).json({ error: 'Registration failed' });
                     }
 
-                    // Check if insertId is valid
                     if (!results.insertId) {
                         return res.status(500).json({ error: 'Failed to retrieve user ID' });
                     }
 
-                    // Generate Access Token
                     const authToken = jwt.sign(
-                        { userID: results.insertId, username },
+                        { userID: results.insertId, username, isAdmin: false }, // Include isAdmin
                         process.env.JWT_SECRET,
                         { expiresIn: '1h' }
                     );
 
-                    // Generate Refresh Token
                     const refreshToken = jwt.sign(
-                        { userID: results.insertId, username },
+                        { userID: results.insertId, username, isAdmin: false },
                         process.env.REFRESH_TOKEN_SECRET,
                         { expiresIn: '7d' }
                     );
 
-                    // Send tokens as HTTP-only cookies
                     res.cookie('authToken', authToken, {
                         httpOnly: true,
                         secure: process.env.NODE_ENV === 'production',

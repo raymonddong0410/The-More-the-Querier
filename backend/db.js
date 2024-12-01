@@ -20,7 +20,9 @@ async function createTables(pool) {
             fullname VARCHAR(50) NOT NULL,
             email VARCHAR(50) NOT NULL UNIQUE, 
             username VARCHAR(20) NOT NULL UNIQUE, 
-            password VARCHAR(64) NOT NULL 
+            password VARCHAR(64) NOT NULL,
+            isAdmin BOOLEAN NOT NULL DEFAULT FALSE,
+            isBanned BOOLEAN NOT NULL DEFAULT FALSE
         )`,
 
         // Profile Settings Table

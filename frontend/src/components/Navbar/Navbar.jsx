@@ -22,7 +22,7 @@ function Navbar({ loggedIn }) {
                     <li><Link to="/">Home</Link></li>
                     {loggedIn && (
                         <>
-                            <li><Link to="/leagues">Leagues</Link></li>
+                            <li><Link to="/league">Leagues</Link></li>
                             <li><Link to="/draft">Draft</Link></li>
                             <li><Link to="/dashboard">Dashboard</Link></li>
                             

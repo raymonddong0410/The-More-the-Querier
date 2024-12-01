@@ -3,38 +3,39 @@ import axios from 'axios';
 // Set base URL for axios
 // axios.defaults.baseURL = 'https://themorethequerier.online/backend';
 axios.defaults.baseURL = 'http://localhost:3000/backend';
-axios.defaults.withCredentials = true; // Include cookies with requests
+axios.defaults.withCredentials = true;
 
-// Check if user is logged in
 export async function isLoggedIn() {
     try {
-        const response = await axios.get('/validate'); // Call the validate route
-        return response.status === 200; // User is logged in
+        const response = await axios.get('/validate');
+        if (response.status === 200) {
+            return {
+                loggedIn: true,
+                isAdmin: response.data.user.isAdmin, // Include isAdmin
+            };
+        }
     } catch (error) {
         console.error('Validation error:', error.response?.data || error.message);
-
         if (error.response?.status === 401) {
-            // Try to refresh the token if it expired
             try {
                 await axios.post('/refresh');
                 return true; // Successfully refreshed
             } catch (refreshError) {
                 console.error('Token refresh failed:', refreshError);
-                return false; // Refresh failed
             }
         }
-        return false; // Not logged in
+        return { loggedIn: false, isAdmin: false };
     }
+    return { loggedIn: false, isAdmin: false };
 }
 
-// Logout user
 export async function logout() {
     try {
-        await axios.post('/logout'); // Clear cookies on the backend
+        await axios.post('/logout');
     } catch (error) {
         console.error('Error during logout:', error);
     }
-    window.location.href = '/'; // Redirect to login page
+    window.location.href = '/';
 }
 
 // // Axios interceptor for automatic token refresh

@@ -20,27 +20,28 @@ module.exports = (pool) => {
                 }
 
                 const user = results[0];
+                if (user.isBanned) {
+                    return res.status(403).json({ error: 'Account is banned. Please contact support.' });
+                }
+
                 const isMatch = await bcrypt.compare(password, user.password);
 
                 if (!isMatch) {
                     return res.status(401).json({ error: 'Invalid username or password' });
                 }
 
-                // Generate Access Token
                 const token = jwt.sign(
-                    { userID: user.userID, username: user.username },
+                    { userID: user.userID, username: user.username, isAdmin: user.isAdmin }, // Include isAdmin
                     process.env.JWT_SECRET,
                     { expiresIn: '1h' }
                 );
 
-                // Generate Refresh Token
                 const refreshToken = jwt.sign(
-                    { userID: user.userID, username: user.username },
+                    { userID: user.userID, username: user.username, isAdmin: user.isAdmin },
                     process.env.REFRESH_TOKEN_SECRET,
-                    { expiresIn: '7d' } // Longer expiry for refresh token
+                    { expiresIn: '7d' }
                 );
 
-                // Send tokens as HTTP-only cookies
                 res.cookie('authToken', token, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === 'production',
