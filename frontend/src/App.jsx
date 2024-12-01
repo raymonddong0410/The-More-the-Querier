@@ -4,7 +4,7 @@ import AuthRoutes from './routes/AuthRoutes';
 import AboutPage from './routes/AboutPage';
 import HomePage from './routes/HomePage';
 import DashboardPage from './routes/DashboardPage';
-import Navbar from './components/Navbar';
+import Navbar from './components/Navbar/Navbar';
 import { isLoggedIn, logout } from './utils/auth';
 import ProtectedRoute from './components/ProtectedRoute';
 
