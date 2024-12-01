@@ -6,10 +6,10 @@ module.exports = (pool) => {
     const router = express.Router();
 
     router.post('/', async (req, res) => {
-        const { username, password } = req.body;
+        const { username, password, fullname, email } = req.body;
 
-        if (!username || !password) {
-            return res.status(400).json({ error: 'Username and password are required' });
+        if (!username || !password || !fullname || !email) {
+            return res.status(400).json({ error: 'Missing user fields' });
         }
 
         try {
@@ -18,8 +18,8 @@ module.exports = (pool) => {
 
             // Insert user into the database
             pool.query(
-                'INSERT INTO users (username, password) VALUES (?, ?)',
-                [username, hashedPassword],
+                'INSERT INTO users (username, password, fullname, email) VALUES (?, ?, ?, ?)',
+                [username, hashedPassword, fullname, email],
                 (err, results) => {
                     if (err) {
                         if (err.code === 'ER_DUP_ENTRY') {
@@ -37,14 +37,14 @@ module.exports = (pool) => {
 
                     // Generate Access Token
                     const authToken = jwt.sign(
-                        { id: results.insertId, username },
+                        { userID: results.insertId, username },
                         process.env.JWT_SECRET,
                         { expiresIn: '1h' }
                     );
 
                     // Generate Refresh Token
                     const refreshToken = jwt.sign(
-                        { id: results.insertId, username },
+                        { userID: results.insertId, username },
                         process.env.REFRESH_TOKEN_SECRET,
                         { expiresIn: '7d' }
                     );

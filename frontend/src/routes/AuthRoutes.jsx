@@ -9,16 +9,18 @@ function AuthRoutes({ onLogin, loggedIn }) {
     const [showRegister, setShowRegister] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [fullname, setFullname] = useState('');
+    const [email, setEmail] = useState('');
 
     if (loggedIn) {
         // Redirect logged-in users to the homepage or dashboard
-        return <Navigate to="/" />;
+        return <Navigate to="/home" />;
     }
 
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/register', { username, password });
+            const response = await axios.post('/register', { username, password, fullname, email });
             console.log('Registration successful:', response.data);
             onLogin(); // Immediately log in the user
         } catch (error) {
@@ -53,6 +55,18 @@ function AuthRoutes({ onLogin, loggedIn }) {
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Fullname"
+                        value={fullname}
+                        onChange={(e) => setFullname(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                     <button type="submit">Register</button>
                     <button type="button" onClick={() => setShowRegister(false)}>
