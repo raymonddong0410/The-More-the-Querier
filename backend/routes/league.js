@@ -16,10 +16,11 @@ module.exports = (pool) => {
     
 
     // Fetch details of a specific league
-    router.get('/:id', (req, res) => {
-        const { id } = req.params;
+    router.get('/:leagueID', (req, res) => {
+        const { leagueID } = req.params;
+        console.log(leagueID)
 
-        pool.query('SELECT * FROM league WHERE leagueID = ?', [id], (err, results) => {
+        pool.query('SELECT * FROM league WHERE leagueID = ?', [leagueID], (err, results) => {
             if (err) {
                 console.error('Error fetching league:', err);
                 return res.status(500).json({ error: 'Failed to fetch league details.' });
@@ -30,6 +31,28 @@ module.exports = (pool) => {
             }
 
             res.status(200).json(results[0]);
+        });
+    });
+
+    router.get('/:leagueID/teams', (req, res) => {
+        const {leagueID} = req.params;
+
+        const query = `
+        SELECT 
+            t.teamID, 
+            t.teamName, 
+            t.totalPoints, 
+            t.ranking
+        FROM team t
+        WHERE t.leagueID = ?`;
+
+        pool.query(query, [leagueID], (err, results) => {
+            if (err) {
+                console.error('Database error:', err);
+                return res.status(500).json({ error: 'Failed to fetch teams.' });
+            }
+
+            res.status(200).json({ teams: results });
         });
     });
 

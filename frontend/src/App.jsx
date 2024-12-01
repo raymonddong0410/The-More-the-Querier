@@ -106,7 +106,7 @@ function App() {
                     }
                 />
                 <Route
-                    path="/league/:id"
+                    path="/league/:leagueID"
                     element={
                         <ProtectedRoute loggedIn={authState.loggedIn}>
                             <LeagueDetails />
