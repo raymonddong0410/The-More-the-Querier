@@ -11,35 +11,42 @@ function AuthRoutes({ onLogin, loggedIn }) {
     const [password, setPassword] = useState('');
     const [fullname, setFullname] = useState('');
     const [email, setEmail] = useState('');
-    const [redirect, setRedirect] = useState(false);
 
-    if (loggedIn || redirect) {
+    if (loggedIn) {
+        // Redirect logged-in users to the homepage
         return <Navigate to="/home" />;
     }
-
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        try {
-            await axios.post('/register', { username, password, fullname, email });
-            console.log('Registration successful');
-            onLogin(); // Notify parent about login
-            setRedirect(true); // Trigger redirect
-        } catch (error) {
-            console.error('Registration error:', error);
-        }
-    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             await axios.post('/login', { username, password });
             console.log('Login successful');
-            onLogin(); // Notify parent about login
-            setRedirect(true); // Trigger redirect
+            const userResponse = await axios.get('/validate'); // Fetch updated user data
+            onLogin({
+                loggedIn: true,
+                isAdmin: userResponse.data.user.isAdmin, // Pass isAdmin
+            });
         } catch (error) {
             console.error('Login error:', error);
         }
     };
+    
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post('/register', { username, password, fullname, email });
+            console.log('Registration successful');
+            const userResponse = await axios.get('/validate'); // Fetch updated user data
+            onLogin({
+                loggedIn: true,
+                isAdmin: userResponse.data.user.isAdmin, // Pass isAdmin
+            });
+        } catch (error) {
+            console.error('Registration error:', error);
+        }
+    };
+    
 
     return (
         <div className="AuthRoutes">
