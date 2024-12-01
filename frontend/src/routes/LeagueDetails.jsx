@@ -4,6 +4,7 @@ import axios from 'axios';
 
 function LeagueDetails() {
     const { leagueID } = useParams();
+    console.log(leagueID)
     const [league, setLeague] = useState(null);
     const [teams, setTeams] = useState([])
 
@@ -41,6 +42,30 @@ function LeagueDetails() {
             <p>Commissioner: {league.commissioner}</p>
             <p>Max Teams: {league.maxTeams}</p>
             <p>Draft Date: {league.draftDate ? new Date(league.draftDate).toLocaleDateString() : 'TBD'}</p>
+
+            <h2>Teams in this League</h2>
+            {teams.length === 0 ? (
+                <p>No teams in this league yet.</p>
+            ) : (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Team Name</th>
+                            <th>Total Points</th>
+                            <th>Ranking</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {teams.map((teams) => (
+                            <tr key={teams.teamID}>
+                                <td>{teams.teamName}</td>
+                                <td>{teams.totalPoints || 0}</td>
+                                <td>{teams.ranking || 'N/A'}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 }
