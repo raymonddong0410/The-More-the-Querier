@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import AuthRoutes from './routes/AuthRoutes';
 import AboutPage from './routes/AboutPage';
 import HomePage from './routes/HomePage';
+import TeamPage from './routes/TeamPage';
 import DashboardPage from './routes/DashboardPage';
 import Navbar from './components/Navbar';
 import { isLoggedIn, logout } from './utils/auth';
@@ -70,15 +71,30 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-                        <Route path="/league" element={<LeagueList />} />
-    <Route
-        path="/league/:id"
-        element={
-            <ProtectedRoute loggedIn={loggedIn}>
-                <LeagueDetails />
-            </ProtectedRoute>
-        }
-    />
+                        <Route
+                            path="/team/:teamID"
+                            element={
+                                <ProtectedRoute loggedIn={loggedIn}>
+                                    <TeamPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                <Route
+                    path="/league"
+                    element={
+                        <ProtectedRoute loggedIn={loggedIn}>
+                            <LeagueList />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/league/:id"
+                    element={
+                        <ProtectedRoute loggedIn={loggedIn}>
+                            <LeagueDetails />
+                        </ProtectedRoute>
+                    }
+                />
                 {/* Fallback route */}
                 <Route path="*" element={<div>404 - Page not found</div>} />
             </Routes>
