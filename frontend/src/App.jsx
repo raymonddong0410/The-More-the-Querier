@@ -9,6 +9,9 @@ import DashboardPage from './routes/DashboardPage';
 import Navbar from './components/Navbar';
 import { isLoggedIn, logout } from './utils/auth';
 import ProtectedRoute from './components/ProtectedRoute';
+import LeagueList from './routes/LeagueList';
+import LeagueDetails from './routes/LeagueDetails';
+
 
 function App() {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -85,6 +88,23 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
+
+                <Route
+                    path="/league"
+                    element={
+                        <ProtectedRoute loggedIn={loggedIn}>
+                            <LeagueList />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/league/:id"
+                    element={
+                        <ProtectedRoute loggedIn={loggedIn}>
+                            <LeagueDetails />
+                        </ProtectedRoute>
+                    }
+                />
                 {/* Fallback route */}
                 <Route path="*" element={<div>404 - Page not found</div>} />
             </Routes>

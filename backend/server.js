@@ -33,6 +33,7 @@ initializeDatabase(pool)
         app.use('/backend/fetchUserData', require('./routes/fetchUserData')(pool));
         app.use('/backend/userLeagues', require('./routes/getUserLeagues')(pool));
         app.use('/backend/userMatches', require('./routes/getUserMatches')(pool));
+        app.use('/backend/league', require('./routes/league')(pool));
 
         app.use('/backend/teamDetails', require('./routes/getTeamDetails')(pool));
         app.use('/backend/teamPlayers', require('./routes/getTeamPlayers')(pool));

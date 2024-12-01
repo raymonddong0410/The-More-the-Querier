@@ -33,23 +33,23 @@ async function createTables(pool) {
 
         // League Table
         `CREATE TABLE IF NOT EXISTS league (
-            leagueID NUMERIC(8,0) PRIMARY KEY,
+            leagueID INT AUTO_INCREMENT PRIMARY KEY,
             leagueName VARCHAR(30) NOT NULL,
             leagueType CHAR(1) NOT NULL,
             commissioner INT,
-            maxTeams NUMERIC(2,0) NOT NULL,
+            maxTeams INT NOT NULL,
             draftDate DATE,
             FOREIGN KEY (commissioner) REFERENCES users(userID)
         )`,
 
         // Team Table
         `CREATE TABLE IF NOT EXISTS team (
-            teamID NUMERIC(8,0) PRIMARY KEY,
+            teamID INT AUTO_INCREMENT PRIMARY KEY, 
             teamName VARCHAR(25) NOT NULL,
-            leagueID NUMERIC(8,0),
+            leagueID INT, 
             owner INT,
-            totalPoints NUMERIC(6,0),
-            ranking NUMERIC(3,0),
+            totalPoints INT,
+            ranking INT,
             status CHAR(1),
             FOREIGN KEY (leagueID) REFERENCES league(leagueID),
             FOREIGN KEY (owner) REFERENCES users(userID)
@@ -57,23 +57,23 @@ async function createTables(pool) {
 
         // Player Table
         `CREATE TABLE IF NOT EXISTS player (
-            playerID NUMERIC(8,0) PRIMARY KEY, 
+            playerID INT AUTO_INCREMENT PRIMARY KEY, 
             fullname VARCHAR(50) NOT NULL, 
             sport VARCHAR(20) NOT NULL, 
             position VARCHAR(20), 
             realLifeTeam VARCHAR(50), 
-            fantasyPoints NUMERIC(6,2), 
+            fantasyPoints DECIMAL(6,2), 
             availabilityStatus CHAR(1)
         )`,
 
         // Matches Table
         `CREATE TABLE IF NOT EXISTS matches (
-            matchID NUMERIC(8,0) PRIMARY KEY,
-            team1ID NUMERIC(8,0),
-            team2ID NUMERIC(8,0),
+            matchID INT AUTO_INCREMENT PRIMARY KEY, 
+            team1ID INT, 
+            team2ID INT, 
             matchDate DATE,
             finalScore VARCHAR(10),
-            winner NUMERIC(8,0),
+            winner INT, 
             FOREIGN KEY (team1ID) REFERENCES team(teamID),
             FOREIGN KEY (team2ID) REFERENCES team(teamID),
             FOREIGN KEY (winner) REFERENCES team(teamID)
@@ -81,8 +81,8 @@ async function createTables(pool) {
 
         // Player Statistic Table
         `CREATE TABLE IF NOT EXISTS playerStatistic (
-            matchID NUMERIC(8,0),
-            playerID NUMERIC(8,0),
+            matchID INT, 
+            playerID INT, 
             performanceStats JSON,
             injuryStatus CHAR(1),
             PRIMARY KEY (matchID, playerID),
@@ -92,8 +92,8 @@ async function createTables(pool) {
 
         // Draft Table
         `CREATE TABLE IF NOT EXISTS draft (
-            draftID NUMERIC(8,0) PRIMARY KEY,
-            leagueID NUMERIC(8,0) NOT NULL,
+            draftID INT AUTO_INCREMENT PRIMARY KEY,
+            leagueID INT NOT NULL, 
             draftDate DATE NOT NULL,
             draftOrder CHAR(1) NOT NULL,
             draftStatus CHAR(1) NOT NULL,
@@ -102,8 +102,8 @@ async function createTables(pool) {
 
         // Drafted Players Table
         `CREATE TABLE IF NOT EXISTS draftedPlayers (
-            draftID NUMERIC(8,0) NOT NULL,
-            playerID NUMERIC(8,0) NOT NULL,
+            draftID INT NOT NULL, 
+            playerID INT NOT NULL, 
             PRIMARY KEY (draftID, playerID),
             FOREIGN KEY (draftID) REFERENCES draft(draftID),
             FOREIGN KEY (playerID) REFERENCES player(playerID)
@@ -111,8 +111,8 @@ async function createTables(pool) {
 
         // Player Team Table
         `CREATE TABLE IF NOT EXISTS playerTeam (
-            playerID NUMERIC(8,0) NOT NULL,
-            teamID NUMERIC(8,0) NOT NULL,
+            playerID INT NOT NULL, 
+            teamID INT NOT NULL, 
             PRIMARY KEY (playerID, teamID),
             FOREIGN KEY (playerID) REFERENCES player(playerID),
             FOREIGN KEY (teamID) REFERENCES team(teamID)
