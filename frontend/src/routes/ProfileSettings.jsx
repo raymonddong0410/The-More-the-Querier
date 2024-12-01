@@ -23,9 +23,7 @@ const ProfileSettings = () => {
 
         try {
             console.log('Submitting profile settings:', profileSettings);
-            const response = await axios.put(
-                '/updateProfileSettings',
-                profileSettings
+            const response = await axios.put('/updateProfileSettings',profileSettings
             );
             console.log('Profile updated:', response.data);
         } catch (error) {

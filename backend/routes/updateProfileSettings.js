@@ -5,8 +5,6 @@ module.exports = (pool) => {
     const router = express.Router();
 
     router.put('/', verifyToken, (req, res) => {
-        console.log('User ID:', req.user.userID); // Log user ID to confirm user is authenticated
-    
         const userID = req.user.userID;
         const { favoriteSport, aboutMe } = req.body;
     
