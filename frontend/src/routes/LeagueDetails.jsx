@@ -3,20 +3,32 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 function LeagueDetails() {
-    const { id } = useParams();
+    const { leagueID } = useParams();
     const [league, setLeague] = useState(null);
+    const [teams, setTeams] = useState([])
 
     useEffect(() => {
         const fetchLeague = async () => {
             try {
-                const response = await axios.get(`/league/${id}`);
+                const response = await axios.get(`/league/${leagueID}`);
                 setLeague(response.data);
             } catch (error) {
                 console.error('Error fetching league details:', error);
             }
         };
+
+        const fetchTeams = async () => {
+            try {
+                const response = await axios.get(`/league/${leagueID}/teams`);
+                setTeams(response.data.teams);
+            } catch (error) {
+                console.error('Error fetching team details:', error);
+            }
+        }
+
         fetchLeague();
-    }, [id]);
+        fetchTeams();
+    }, [leagueID]);
 
     if (!league) {
         return <div>Loading...</div>;
