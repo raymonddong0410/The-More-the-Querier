@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function LeagueDetails() {
     const { leagueID } = useParams();
-    console.log(leagueID)
+    const navigate = useNavigate();
     const [league, setLeague] = useState(null);
     const [teams, setTeams] = useState([])
+
+    const handleTeamClick = (teamID) => {
+        navigate(`/team/${teamID}`);
+    };
 
     useEffect(() => {
         const fetchLeague = async () => {
@@ -50,17 +54,23 @@ function LeagueDetails() {
                 <table>
                     <thead>
                         <tr>
-                            <th>Team Name</th>
-                            <th>Total Points</th>
-                            <th>Ranking</th>
+                            <th>Team Name| </th>
+                            <th>Total Points| </th>
+                            <th>Ranking| </th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {teams.map((teams) => (
-                            <tr key={teams.teamID}>
-                                <td>{teams.teamName}</td>
-                                <td>{teams.totalPoints || 0}</td>
-                                <td>{teams.ranking || 'N/A'}</td>
+                        {teams.map((team) => (
+                            <tr key={team.teamID}>
+                                <td>   {team.teamName}</td>
+                                <td>{team.totalPoints || 0}</td>
+                                <td>{team.ranking || 'N/A'}</td>
+                                <td>
+                                    <button onClick={() => handleTeamClick(team.teamID)}>
+                                        View Team
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
