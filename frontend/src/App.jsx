@@ -113,7 +113,7 @@ function App() {
                 <Route
                     path="/profileSettings"
                     element={
-                        <ProtectedRoute loggedIn={loggedIn}>
+                        <ProtectedRoute loggedIn={authState.loggedIn}>
                             <ProfileSettings />
                             </ProtectedRoute>
                     }

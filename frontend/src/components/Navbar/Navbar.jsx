@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { logout } from '../../utils/auth';
-import './Navbar.css';
+import { logout } from '../../utils/auth'; // Adjust path as needed
+import './Navbar.css'; // Keep styling if required
 
-function Navbar({ loggedIn }) {
+function Navbar({ loggedIn, isAdmin, onLogout }) {
     const location = useLocation();
 
     // Don't render the navbar on the login page
@@ -12,7 +12,10 @@ function Navbar({ loggedIn }) {
     }
 
     const handleLogout = () => {
-        logout();
+        if (onLogout) {
+            onLogout(); // Call the parent logout handler
+        }
+        logout(); // Perform logout
     };
 
     return (
@@ -25,16 +28,15 @@ function Navbar({ loggedIn }) {
                             <li><Link to="/league">Leagues</Link></li>
                             <li><Link to="/draft">Draft</Link></li>
                             <li><Link to="/dashboard">Dashboard</Link></li>
-                            
-                            
+                            <li><Link to="/about">About</Link></li>
+                            {isAdmin && <li><Link to="/admin">Admin Panel</Link></li>}
                         </>
                     )}
                 </ul>
                 {loggedIn && (
-                   <div className="logout-container">
-                   <Link to="/about" className="about-us-link">About Us</Link>
-                   <button className="logout-button" onClick={handleLogout}>Logout</button>
-               </div>
+                    <div className="logout-container">
+                        <button className="logout-button" onClick={handleLogout}>Logout</button>
+                    </div>
                 )}
             </div>
         </nav>
