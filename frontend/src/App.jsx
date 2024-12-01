@@ -115,6 +115,9 @@ function App() {
                     element={
                         <ProtectedRoute loggedIn={loggedIn}>
                             <ProfileSettings />
+                            </ProtectedRoute>
+                    }
+                    />
 
 
                 {/* Admin-Specific Routes */}
