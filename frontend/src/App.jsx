@@ -56,7 +56,7 @@ function App() {
             <Navbar loggedIn={authState.loggedIn} isAdmin={authState.isAdmin} onLogout={handleLogout} />
             <Routes>
                 {/* Public Routes */}
-                <Route path="/" element={<AuthRoutes onLogin={() => setAuthState({ ...authState, loggedIn: true })} />} />
+                <Route path="/" element={<AuthRoutes onLogin={() => setAuthState({ ...authState, loggedIn: true })} loggedIn={authState.loggedIn} />}/>
                 <Route path="/about" element={<AboutPage />} />
 
                 {/* User-Specific Routes */}

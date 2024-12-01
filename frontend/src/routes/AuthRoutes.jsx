@@ -11,18 +11,19 @@ function AuthRoutes({ onLogin, loggedIn }) {
     const [password, setPassword] = useState('');
     const [fullname, setFullname] = useState('');
     const [email, setEmail] = useState('');
+    const [redirect, setRedirect] = useState(false);
 
-    if (loggedIn) {
-        // Redirect logged-in users to the homepage or dashboard
+    if (loggedIn || redirect) {
         return <Navigate to="/home" />;
     }
 
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/register', { username, password, fullname, email });
-            console.log('Registration successful:', response.data);
-            onLogin(); // Immediately log in the user
+            await axios.post('/register', { username, password, fullname, email });
+            console.log('Registration successful');
+            onLogin(); // Notify parent about login
+            setRedirect(true); // Trigger redirect
         } catch (error) {
             console.error('Registration error:', error);
         }
@@ -31,9 +32,10 @@ function AuthRoutes({ onLogin, loggedIn }) {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/login', { username, password });
-            console.log('Login successful:', response.data);
-            onLogin(); // Notify parent component
+            await axios.post('/login', { username, password });
+            console.log('Login successful');
+            onLogin(); // Notify parent about login
+            setRedirect(true); // Trigger redirect
         } catch (error) {
             console.error('Login error:', error);
         }
