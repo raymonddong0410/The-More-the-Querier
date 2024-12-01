@@ -29,8 +29,9 @@ function Navbar({ loggedIn, isAdmin, onLogout }) {
                             <li><Link to="/draft">Draft</Link></li>
                             <li><Link to="/dashboard">Dashboard</Link></li>
                             <li><Link to="/about">About</Link></li>
-                            {/* Only render Admin Panel if isAdmin is true */}
-                            {isAdmin === true && <li><Link to="/admin">Admin Panel</Link></li>}
+                            {isAdmin && (
+                            <li><Link to="/admin">Admin Panel</Link></li>
+                        )}
                         </>
                     )}
                 </ul>
