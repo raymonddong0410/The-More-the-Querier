@@ -28,23 +28,29 @@ module.exports = (pool) => {
     });
 
     // Delete a league
-// Delete a league
-router.delete('/deleteLeague/:leagueID', checkAdmin, async (req, res) => {
-    const { leagueID } = req.params;
-    try {
-        // Delete dependent records in `draft` table
-        await pool.promise().query('DELETE FROM draft WHERE leagueID = ?', [leagueID]);
-
-        // Delete the league
-        await pool.promise().query('DELETE FROM league WHERE leagueID = ?', [leagueID]);
-
-        res.status(200).json({ message: 'League deleted successfully' });
-    } catch (err) {
-        console.error('Error deleting league:', err);
-        res.status(500).json({ error: 'Failed to delete league' });
-    }
-});
-
+    router.delete('/deleteLeague/:leagueID', checkAdmin, async (req, res) => {
+        const { leagueID } = req.params;
+    
+        try {
+            // Delete dependent records in the playerTeam table
+            await pool.promise().query('DELETE FROM playerTeam WHERE teamID IN (SELECT teamID FROM team WHERE leagueID = ?)', [leagueID]);
+    
+            // Delete dependent records in the team table
+            await pool.promise().query('DELETE FROM team WHERE leagueID = ?', [leagueID]);
+    
+            // Delete dependent records in the draft table
+            await pool.promise().query('DELETE FROM draft WHERE leagueID = ?', [leagueID]);
+    
+            // Delete the league itself
+            await pool.promise().query('DELETE FROM league WHERE leagueID = ?', [leagueID]);
+    
+            res.status(200).json({ message: 'League deleted successfully' });
+        } catch (err) {
+            console.error('Error deleting league:', err);
+            res.status(500).json({ error: 'Failed to delete league' });
+        }
+    });
+    
 
     return router;
 };
