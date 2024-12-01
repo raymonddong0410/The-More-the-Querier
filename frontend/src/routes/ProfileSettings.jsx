@@ -1,50 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 const ProfileSettings = () => {
     const [profileSettings, setProfileSettings] = useState({
         favoriteSport: '',
-        aboutMe: '',
+        aboutMe: ''
     });
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchProfileSettings = async () => {
-            try {
-                const response = await axios.get('/profileSettings');
-                setProfileSettings(response.data);
-                setLoading(false);
-            } catch (err) {
-                setError('Error fetching profile settings');
-                setLoading(false);
-            }
-        };
-
-        fetchProfileSettings();
-    }, []);
+    const [saving, setSaving] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProfileSettings((prevSettings) => ({
-            ...prevSettings,
-            [name]: value,
-        }));
+        setProfileSettings({
+            ...profileSettings,
+            [name]: value
+        });
     };
 
-    const handleSave = async (e) => {
-        e.preventDefault();
+    const handleSave = async (event) => {
+        event.preventDefault();
+        setSaving(true);
 
         try {
-            await axios.put('/profileSettings', profileSettings); // Update the profile settings
-            alert('Profile settings saved successfully!');
-        } catch (err) {
-            alert('Error saving profile settings');
+            console.log('Submitting profile settings:', profileSettings);
+            const response = await axios.put(
+                '/updateProfileSettings',
+                profileSettings
+            );
+            console.log('Profile updated:', response.data);
+        } catch (error) {
+            console.error('Error saving profile:', error);
+        } finally {
+            setSaving(false);
         }
     };
-
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
 
     return (
         <div className="profileSettings">
@@ -60,9 +49,6 @@ const ProfileSettings = () => {
                         onChange={handleChange}
                         placeholder="Enter your favorite sport"
                     />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="aboutMe">About Me</label>
                     <textarea
                         id="aboutMe"
                         name="aboutMe"
@@ -71,7 +57,9 @@ const ProfileSettings = () => {
                         placeholder="Tell us about yourself"
                     />
                 </div>
-                <button type="submit">Save</button>
+                <button type="submit" disabled={saving}>
+                    {saving ? 'Saving...' : 'Save'}
+                </button>
             </form>
         </div>
     );

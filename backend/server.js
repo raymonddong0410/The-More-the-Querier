@@ -15,7 +15,7 @@ app.use(cors({
         'http://localhost:5173', // Development frontend
         'https://themorethequerier.online', // Production frontend
     ],
-    methods: ['GET', 'POST', 'DELETE'],
+    methods: ['GET', 'POST', 'DELETE', 'PUT'],
     credentials: true, // Allow cookies to be sent with requests
 }));
 app.use(express.json());
@@ -30,7 +30,9 @@ initializeDatabase(pool)
         app.use('/backend/logout', require('./routes/logout')());
         app.use('/backend/refresh', require('./routes/refresh')()); // Include refresh route
         app.use('/backend/validate', require('./routes/validate')());
+
         app.use('/backend/profileSettings', require('./routes/profileSettings')(pool));
+        app.use('/backend/updateProfileSettings', require('./routes/updateProfileSettings')(pool));
 
         app.use('/backend/fetchUserData', require('./routes/fetchUserData')(pool));
         app.use('/backend/userLeagues', require('./routes/getUserLeagues')(pool));
