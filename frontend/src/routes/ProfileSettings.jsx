@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import './ProfileSettings.css';
 const ProfileSettings = () => {
     const [profileSettings, setProfileSettings] = useState({
         favoriteSport: '',
@@ -8,7 +8,7 @@ const ProfileSettings = () => {
     });
 
     const [saving, setSaving] = useState(false);
-
+    const [saved, setSaved] = useState(false); 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setProfileSettings({
@@ -25,6 +25,8 @@ const ProfileSettings = () => {
             console.log('Submitting profile settings:', profileSettings);
             const response = await axios.put('/updateProfileSettings',profileSettings
             );
+            setSaved(true);
+            setTimeout(() => setSaved(false), 3000);
             console.log('Profile updated:', response.data);
         } catch (error) {
             console.error('Error saving profile:', error);
@@ -45,22 +47,30 @@ const ProfileSettings = () => {
                         name="favoriteSport"
                         value={profileSettings.favoriteSport}
                         onChange={handleChange}
-                        placeholder="Enter your favorite sport"
+                        placeholder="My favorite sport..."
+                        className="form-input"
                     />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="aboutMe">About Me</label>
                     <textarea
                         id="aboutMe"
                         name="aboutMe"
                         value={profileSettings.aboutMe}
                         onChange={handleChange}
-                        placeholder="Tell us about yourself"
+                        placeholder="Some things about me..."
+                        className="form-input"
                     />
                 </div>
-                <button type="submit" disabled={saving}>
+                <button type="submit" disabled={saving} className="form-button">
                     {saving ? 'Saving...' : 'Save'}
                 </button>
+                {saved && <div className="successMessage">Profile settings saved successfully!</div>}
+               
+             
             </form>
         </div>
     );
-};
+}
 
 export default ProfileSettings;
