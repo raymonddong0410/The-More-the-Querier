@@ -4,6 +4,7 @@ import AuthRoutes from './routes/AuthRoutes';
 import AboutPage from './routes/AboutPage';
 import HomePage from './routes/HomePage';
 import DashboardPage from './routes/DashboardPage';
+import LeaguePage from './routes/LeaguePage';
 import Navbar from './components/Navbar';
 import { isLoggedIn, logout } from './utils/auth';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -64,6 +65,14 @@ function App() {
                             element={
                                 <ProtectedRoute loggedIn={loggedIn}>
                                     <HomePage />
+                                </ProtectedRoute>
+                            }
+                        />
+                            <Route
+                            path="/league"
+                            element={
+                                <ProtectedRoute loggedIn={loggedIn}>
+                                    <LeaguePage />
                                 </ProtectedRoute>
                             }
                         />

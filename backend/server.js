@@ -29,12 +29,19 @@ initializeDatabase(pool)
         app.use('/backend/logout', require('./routes/logout')());
         app.use('/backend/refresh', require('./routes/refresh')()); // Include refresh route
         app.use('/backend/validate', require('./routes/validate')());
-
+        app.use('/backend/league', require('./routes/league')(pool));
         app.use('/backend/fetchUserData', require('./routes/fetchUserData')(pool));
         app.use('/backend/userLeagues', require('./routes/getUserLeagues')(pool));
         app.use('/backend/userMatches', require('./routes/getUserMatches')(pool));
 
 
+        console.log("Registered routes:");
+        app._router.stack.forEach(function(r){
+            if (r.route && r.route.path){
+                console.log(`Route: ${Object.keys(r.route.methods).join(', ')} ${r.route.path}`);
+            }
+        });
+        
         // Start the server
         app.listen(port, () => {
             console.log(`Server is running on ${port}`);
