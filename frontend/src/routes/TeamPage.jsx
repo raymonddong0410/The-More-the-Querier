@@ -47,8 +47,9 @@ function TeamPage() {
         <div className="min-h-screen bg-gray-100 p-6">
         {/* Team Banner */}
         <div className="bg-blue-600 text-white p-4 mb-6 rounded-lg shadow-md">
-            <h1 className="text-2xl font-bold">{teamDetails.username}'s team for {teamDetails.leagueName}</h1>
-            <h1 className="text-2xl font-bold">{teamDetails.teamName}</h1>
+            <h1 className="text-xl font-bold">User: {teamDetails.username}</h1>
+            <h1 className="text-xl font-bold">League: {teamDetails.leagueName}</h1>
+            <h1 className="text-xl font-bold">Team: {teamDetails.teamName}</h1>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
