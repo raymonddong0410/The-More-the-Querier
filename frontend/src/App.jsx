@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import AuthRoutes from './routes/AuthRoutes';
 import AboutPage from './routes/AboutPage';
+import HomePage from './routes/HomePage';
 import DashboardPage from './routes/DashboardPage';
 import Navbar from './components/Navbar';
 import { isLoggedIn, logout } from './utils/auth';
@@ -47,10 +48,8 @@ function App() {
         <>
             <Navbar loggedIn={loggedIn} onLogout={handleLogout} />
             <Routes>
-                {!loggedIn ? (
-                    <Route path="/" element={<AuthRoutes onLogin={() => setLoggedIn(true)} />} />
-                ) : (
-                    <>
+                    <Route path="/" element={<AuthRoutes onLogin={() => setLoggedIn(true)} loggedIn={loggedIn}/>} />
+                    
                         <Route path="/about" element={<AboutPage />} />
                         <Route
                             path="/dashboard"
@@ -60,8 +59,14 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-                    </>
-                )}
+                         <Route
+                            path="/home"
+                            element={
+                                <ProtectedRoute loggedIn={loggedIn}>
+                                    <HomePage />
+                                </ProtectedRoute>
+                            }
+                        />
                 {/* Fallback route */}
                 <Route path="*" element={<div>404 - Page not found</div>} />
             </Routes>

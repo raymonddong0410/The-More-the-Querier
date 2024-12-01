@@ -16,7 +16,7 @@ module.exports = () => {
 
             // Generate a new authToken
             const newAuthToken = jwt.sign(
-                { id: payload.id, username: payload.username },
+                { userID: payload.userID, username: payload.username },
                 process.env.JWT_SECRET,
                 { expiresIn: '1h' }
             );

@@ -30,6 +30,10 @@ initializeDatabase(pool)
         app.use('/backend/refresh', require('./routes/refresh')()); // Include refresh route
         app.use('/backend/validate', require('./routes/validate')());
 
+        app.use('/backend/fetchUserData', require('./routes/fetchUserData')(pool));
+        app.use('/backend/userLeagues', require('./routes/getUserLeagues')(pool));
+        app.use('/backend/userMatches', require('./routes/getUserMatches')(pool));
+
 
         // Start the server
         app.listen(port, () => {
