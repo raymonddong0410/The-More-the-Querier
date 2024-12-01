@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { logout } from '../utils/auth';
 
-function Navbar({ loggedIn }) {
+function Navbar({ loggedIn, isAdmin, onLogout }) {
     const handleLogout = () => {
-        logout();
+        onLogout();
     };
 
     return (
@@ -16,6 +16,9 @@ function Navbar({ loggedIn }) {
                         {/* Links for logged-in users */}
                         <li><Link to="/dashboard">Dashboard</Link></li>
                         <li><Link to="/about">About</Link></li>
+                        {isAdmin && (
+                            <li><Link to="/admin">Admin Panel</Link></li>
+                        )}
                         <li><button onClick={handleLogout}>Logout</button></li>
                     </>
                 ) : (

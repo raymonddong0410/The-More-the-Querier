@@ -6,27 +6,28 @@ import HomePage from './routes/HomePage';
 import TeamPage from './routes/TeamPage';
 import PlayerPage from './routes/PlayerPage';
 import DashboardPage from './routes/DashboardPage';
+import AdminRoutes from './routes/AdminRoutes';
 import Navbar from './components/Navbar';
 import { isLoggedIn, logout } from './utils/auth';
 import ProtectedRoute from './components/ProtectedRoute';
 import LeagueList from './routes/LeagueList';
 import LeagueDetails from './routes/LeagueDetails';
 
-
 function App() {
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [loading, setLoading] = useState(true); // Prevent flickering during login check
+    const [authState, setAuthState] = useState({
+        loggedIn: false,
+        isAdmin: false,
+        loading: true, // Prevent flickering during login check
+    });
 
     useEffect(() => {
         async function checkLoginStatus() {
             try {
                 const status = await isLoggedIn();
-                setLoggedIn(status);
+                setAuthState({ ...status, loading: false });
             } catch (error) {
                 console.error('Error checking login status:', error);
-                setLoggedIn(false); // Ensure loggedIn is false on error
-            } finally {
-                setLoading(false); // Stop loading state
+                setAuthState({ loggedIn: false, isAdmin: false, loading: false });
             }
         }
 
@@ -38,61 +39,62 @@ function App() {
     const handleLogout = async () => {
         try {
             await logout(); // Clear tokens and perform logout
-            setLoggedIn(false); // Update state after logout
+            setAuthState({ loggedIn: false, isAdmin: false, loading: false });
         } catch (error) {
             console.error('Error during logout:', error);
         }
     };
 
-    if (loading) {
+    if (authState.loading) {
         // Show a loading state while checking login status
         return <div>Loading...</div>;
     }
 
     return (
         <>
-            <Navbar loggedIn={loggedIn} onLogout={handleLogout} />
+            <Navbar loggedIn={authState.loggedIn} isAdmin={authState.isAdmin} onLogout={handleLogout} />
             <Routes>
-                    <Route path="/" element={<AuthRoutes onLogin={() => setLoggedIn(true)} loggedIn={loggedIn}/>} />
-                    
-                        <Route path="/about" element={<AboutPage />} />
-                        <Route
-                            path="/dashboard"
-                            element={
-                                <ProtectedRoute loggedIn={loggedIn}>
-                                    <DashboardPage />
-                                </ProtectedRoute>
-                            }
-                        />
-                         <Route
-                            path="/home"
-                            element={
-                                <ProtectedRoute loggedIn={loggedIn}>
-                                    <HomePage />
-                                </ProtectedRoute>
-                            }
-                        />
-                        <Route
-                            path="/team/:teamID"
-                            element={
-                                <ProtectedRoute loggedIn={loggedIn}>
-                                    <TeamPage />
-                                </ProtectedRoute>
-                            }
-                        />
-                        <Route
-                            path="/player/:playerID"
-                            element={
-                                <ProtectedRoute loggedIn={loggedIn}>
-                                    <PlayerPage />
-                                </ProtectedRoute>
-                            }
-                        />
+                {/* Public Routes */}
+                <Route path="/" element={<AuthRoutes onLogin={() => setAuthState({ ...authState, loggedIn: true })} />} />
+                <Route path="/about" element={<AboutPage />} />
 
+                {/* User-Specific Routes */}
+                <Route
+                    path="/dashboard"
+                    element={
+                        <ProtectedRoute loggedIn={authState.loggedIn}>
+                            <DashboardPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/home"
+                    element={
+                        <ProtectedRoute loggedIn={authState.loggedIn}>
+                            <HomePage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/team/:teamID"
+                    element={
+                        <ProtectedRoute loggedIn={authState.loggedIn}>
+                            <TeamPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/player/:playerID"
+                    element={
+                        <ProtectedRoute loggedIn={authState.loggedIn}>
+                            <PlayerPage />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/league"
                     element={
-                        <ProtectedRoute loggedIn={loggedIn}>
+                        <ProtectedRoute loggedIn={authState.loggedIn}>
                             <LeagueList />
                         </ProtectedRoute>
                     }
@@ -100,11 +102,22 @@ function App() {
                 <Route
                     path="/league/:id"
                     element={
-                        <ProtectedRoute loggedIn={loggedIn}>
+                        <ProtectedRoute loggedIn={authState.loggedIn}>
                             <LeagueDetails />
                         </ProtectedRoute>
                     }
                 />
+
+                {/* Admin-Specific Routes */}
+                <Route
+                    path="/admin/*"
+                    element={
+                        <ProtectedRoute loggedIn={authState.loggedIn}>
+                            <AdminRoutes isAdmin={authState.isAdmin} />
+                        </ProtectedRoute>
+                    }
+                />
+
                 {/* Fallback route */}
                 <Route path="*" element={<div>404 - Page not found</div>} />
             </Routes>

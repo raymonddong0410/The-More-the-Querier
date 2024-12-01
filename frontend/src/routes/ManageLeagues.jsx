@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import CreateLeagueModal from '../components/CreateLeagueModal';
 
-function LeagueList() {
+function ManageLeagues() {
     const [allLeagues, setAllLeagues] = useState([]); // Store all fetched leagues
     const [visibleLeagues, setVisibleLeagues] = useState([]); // Store currently visible leagues
     const [page, setPage] = useState(1);
-    const leaguesPerPage = 10; // Customize the number of leagues per page
-    const [showModal, setShowModal] = useState(false);
+    const leaguesPerPage = 10; // Customize as needed
 
     useEffect(() => {
         async function fetchLeagues() {
@@ -23,6 +20,19 @@ function LeagueList() {
         fetchLeagues();
     }, []);
 
+    const handleDeleteLeague = async (leagueID) => {
+        try {
+            await axios.delete(`/admin/deleteLeague/${leagueID}`);
+            const updatedLeagues = allLeagues.filter(league => league.leagueID !== leagueID);
+            setAllLeagues(updatedLeagues);
+            // Update visible leagues for current page
+            const newVisibleLeagues = updatedLeagues.slice(0, page * leaguesPerPage);
+            setVisibleLeagues(newVisibleLeagues);
+        } catch (error) {
+            console.error('Error deleting league:', error);
+        }
+    };
+
     const loadMoreLeagues = () => {
         const nextPage = page + 1;
         setPage(nextPage);
@@ -31,21 +41,20 @@ function LeagueList() {
 
     return (
         <div>
-            <h1>Leagues</h1>
-            <button onClick={() => setShowModal(true)}>Create League</button>
+            <h2>Manage Leagues</h2>
             <ul>
-                {visibleLeagues.map((league) => (
+                {visibleLeagues.map(league => (
                     <li key={league.leagueID}>
-                        <Link to={`/league/${league.leagueID}`}>{league.leagueName}</Link>
+                        {league.leagueName}
+                        <button onClick={() => handleDeleteLeague(league.leagueID)}>Delete</button>
                     </li>
                 ))}
             </ul>
             {visibleLeagues.length < allLeagues.length && (
                 <button onClick={loadMoreLeagues}>Load More</button>
             )}
-            {showModal && <CreateLeagueModal onClose={() => setShowModal(false)} />}
         </div>
     );
 }
 
-export default LeagueList;
+export default ManageLeagues;
