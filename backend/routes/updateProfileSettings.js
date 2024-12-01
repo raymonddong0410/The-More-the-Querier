@@ -15,22 +15,20 @@ module.exports = (pool) => {
         }
     
         const query = `
-            UPDATE profileSetting
-            SET favoriteSport = ?, aboutMe = ?
-            WHERE userID = ?`;
-    
-        pool.query(query, [favoriteSport, aboutMe, userID], (err, results) => {
-            if (err) {
-                console.error('Database error:', err);
-                return res.status(500).json({ error: 'Failed to save profile settings' });
-            }
-    
-            if (results.affectedRows === 0) {
-                return res.status(404).json({ error: 'Profile settings not found for this user.' });
-            }
-    
-            res.status(200).json({ message: 'Profile settings updated successfully.' });
-        });
+        INSERT INTO profileSetting (userID, favoriteSport, aboutMe)
+        VALUES (?, ?, ?)
+        ON DUPLICATE KEY UPDATE 
+        favoriteSport = VALUES(favoriteSport), 
+        aboutMe = VALUES(aboutMe)`;
+
+    pool.query(query, [userID, favoriteSport, aboutMe], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Failed to save profile settings' });
+        }
+
+        res.status(200).json({ message: 'Profile settings updated successfully.' });
+    });
     });
     
 
