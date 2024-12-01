@@ -34,6 +34,9 @@ initializeDatabase(pool)
         app.use('/backend/userLeagues', require('./routes/getUserLeagues')(pool));
         app.use('/backend/userMatches', require('./routes/getUserMatches')(pool));
 
+        app.use('/backend/teamDetails', require('./routes/getTeamDetails')(pool));
+        app.use('/backend/teamPlayers', require('./routes/getTeamPlayers')(pool));
+
 
         // Start the server
         app.listen(port, () => {
