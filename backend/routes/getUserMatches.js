@@ -1,5 +1,5 @@
 const express = require('express');
-const verifyToken = require('../middleware/verfifyToken')
+const verifyToken = require('../middleware/verifyToken')
 
 module.exports = (pool) => {
     const router = express.Router();

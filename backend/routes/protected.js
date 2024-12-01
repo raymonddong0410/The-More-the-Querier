@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const verifyToken = require('../middleware/verfifyToken')
+const verifyToken = require('../middleware/verifyToken')
 
 module.exports = () => {
     const router = express.Router();

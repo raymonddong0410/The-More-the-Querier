@@ -11,6 +11,7 @@ import { isLoggedIn, logout } from './utils/auth';
 import ProtectedRoute from './components/ProtectedRoute';
 import LeagueList from './routes/LeagueList';
 import LeagueDetails from './routes/LeagueDetails';
+import ProfileSettings from './routes/ProfileSettings';
 
 
 function App() {
@@ -105,6 +106,16 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                
+                <Route
+                    path="/profileSettings"
+                    element={
+                        <ProtectedRoute loggedIn={loggedIn}>
+                            <ProfileSettings />
+                        </ProtectedRoute>
+                    }
+                />
+
                 {/* Fallback route */}
                 <Route path="*" element={<div>404 - Page not found</div>} />
             </Routes>
