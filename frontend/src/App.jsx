@@ -12,6 +12,7 @@ import { isLoggedIn, logout } from './utils/auth';
 import ProtectedRoute from './components/ProtectedRoute';
 import LeagueList from './routes/LeagueList';
 import LeagueDetails from './routes/LeagueDetails';
+import ProfileSettings from './routes/ProfileSettings';
 
 function App() {
     const [authState, setAuthState] = useState({
@@ -108,12 +109,21 @@ function App() {
                     }
                 />
 
+                
+                <Route
+                    path="/profileSettings"
+                    element={
+                        <ProtectedRoute loggedIn={loggedIn}>
+                            <ProfileSettings />
+
+
                 {/* Admin-Specific Routes */}
                 <Route
                     path="/admin/*"
                     element={
                         <ProtectedRoute loggedIn={authState.loggedIn}>
                             <AdminRoutes isAdmin={authState.isAdmin} />
+
                         </ProtectedRoute>
                     }
                 />

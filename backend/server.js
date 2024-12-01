@@ -30,6 +30,7 @@ initializeDatabase(pool)
         app.use('/backend/logout', require('./routes/logout')());
         app.use('/backend/refresh', require('./routes/refresh')()); // Include refresh route
         app.use('/backend/validate', require('./routes/validate')());
+        app.use('/backend/profileSettings', require('./routes/profileSettings')(pool));
 
         app.use('/backend/fetchUserData', require('./routes/fetchUserData')(pool));
         app.use('/backend/userLeagues', require('./routes/getUserLeagues')(pool));
