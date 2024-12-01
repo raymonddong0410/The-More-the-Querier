@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
 
@@ -7,19 +7,17 @@ import { useEffect } from 'react';
 axios.defaults.baseURL = 'http://localhost:3000/backend';
 
 function TeamPage() {
-    const [teamName, setTeamName] = useState('');
-    const [username, setUsername] = useState('');
-    const [leagueName, setLeagueName] = useState('');
+    const [teamDetails, setTeamDetails] = useState({});
     const [players, setPlayers] = useState([]);
     const { teamID } = useParams();
+
+    const navigate = useNavigate();
 
     useEffect(()=> {
         const fetchTeamDetails = async () => {
             try {
                 const response = await axios.get(`/teamDetails/${teamID}`);
-                setTeamName(response.data.team.teamName);
-                setUsername(response.data.team.username);
-                setLeagueName(response.data.team.leagueName);
+                setTeamDetails(response.data.team)
             } catch (err) {
                 console.error("Failed to get team information", err);
             }
@@ -40,25 +38,29 @@ function TeamPage() {
         fetchPlayers();
     }, [teamID]);
 
+    const handlePlayerClick = (playerID) => {
+        navigate(`/player/${playerID}`);
+    };
+
 
     return(
         <div className="min-h-screen bg-gray-100 p-6">
         {/* Team Banner */}
         <div className="bg-blue-600 text-white p-4 mb-6 rounded-lg shadow-md">
-            <h1 className="text-2xl font-bold">{username}'s team for {leagueName}</h1>
-            <h1 className="text-2xl font-bold">{teamName}</h1>
+            <h1 className="text-2xl font-bold">{teamDetails.username}'s team for {teamDetails.leagueName}</h1>
+            <h1 className="text-2xl font-bold">{teamDetails.teamName}</h1>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Team Overview */}
-            {/* <div className="bg-white rounded-lg shadow-md p-4">
+            <div className="bg-white rounded-lg shadow-md p-4">
                 <h2 className="text-xl font-semibold mb-4">Team Overview</h2>
                 <div className="space-y-2">
                     <p><strong>Total Points:</strong> {teamDetails.totalPoints}</p>
                     <p><strong>Ranking:</strong> {teamDetails.ranking}</p>
                     <p><strong>Status:</strong> {teamDetails.status === 'A' ? 'Active' : 'Inactive'}</p>
                 </div>
-            </div> */}
+            </div>
 
             {/* Players Table */}
             <div className="bg-white rounded-lg shadow-md">
@@ -77,7 +79,10 @@ function TeamPage() {
                         </thead>
                         <tbody>
                             {players.map((player) => (
-                                <tr key={player.playerID} className="border-b hover:bg-gray-50">
+                                <tr key={player.playerID} 
+                                className="border-b hover:bg-gray-50"
+                                onClick={() => {handlePlayerClick(player.playerID)}}
+                                >
                                     <td className="p-3">{player.fullname}</td>
                                     <td className="p-3">{player.position}</td>
                                     <td className="p-3">{player.realLifeTeam}</td>
