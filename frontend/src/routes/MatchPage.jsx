@@ -14,20 +14,10 @@ function MatchesPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchTeamDetails = async () => {
-            try {
-                const response = await axios.get(`/team/${teamID}`);
-                setTeamDetails(response.data.team);
-            } catch (err) {
-                console.error("Failed to get team information", err);
-                setError("Failed to load team details");
-            }
-        };
-
         const fetchTeamMatches = async () => {
             try {
                 setIsLoading(true);
-                const response = await axios.get(`/team/${teamID}`);
+                const response = await axios.get(`/teamMatches/${teamID}`);
                 setMatches(response.data.matches || []);
                 setIsLoading(false);
             } catch (err) {
