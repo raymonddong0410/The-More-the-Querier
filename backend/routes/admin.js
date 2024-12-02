@@ -7,7 +7,7 @@ module.exports = (pool) => {
     // Fetch all users
     router.get('/users', checkAdmin, async (req, res) => {
         try {
-            const [users] = await pool.promise().query('SELECT userID, username, email, isAdmin FROM users');
+            const [users] = await pool.promise().query('SELECT * FROM users');
             res.status(200).json(users);
         } catch (err) {
             console.error('Error fetching users:', err);
@@ -26,6 +26,18 @@ module.exports = (pool) => {
             res.status(500).json({ error: 'Failed to ban user' });
         }
     });
+
+    // Unban a user
+    router.post('/unbanUser', checkAdmin, async (req, res) => {
+        const { userID } = req.body;
+        try {
+            await pool.promise().query('UPDATE users SET isBanned = FALSE WHERE userID = ?', [userID]);
+            res.status(200).json({ message: 'User unbanned successfully' });
+        } catch (err) {
+            console.error('Error unbanning user:', err);
+            res.status(500).json({ error: 'Failed to unban user' });
+        }
+    })
 
     // Delete a league
     router.delete('/deleteLeague/:leagueID', checkAdmin, async (req, res) => {
