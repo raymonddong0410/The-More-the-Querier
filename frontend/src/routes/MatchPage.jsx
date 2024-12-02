@@ -19,8 +19,8 @@ function MatchesPage() {
                 const response = await axios.get(`/teamDetails/${teamID}`);
                 setTeamDetails(response.data.team);
             } catch (err) {
-                console.error("Failed to get team information", err);
-                setError("Failed to load team details");
+                console.error("Failed to get team matches information", err);
+                setError("Failed to load team matches");
             }
         };
 
