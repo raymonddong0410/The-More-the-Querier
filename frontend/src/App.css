@@ -87,3 +87,42 @@
   color: #e9f0ff; 
 }
 
+.profile-settings-box {
+  border: 2px solid #ddd; 
+  padding: 5px;
+  border-radius: 10px; 
+  margin: 20px 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: transparent; 
+  text-align: left;
+  padding-left: 20px;
+}
+.profile-settings-box .profile-header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.profile-settings-box .profile-content p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.profile-settings-box .profile-content strong {
+  font-weight: bold;
+}
+
+.profile-settings-box .profile-content {
+  font-family: 'Arial', sans-serif;
+  color: #ffff;
+}
+
+.aboutMe {
+  margin: 1em 0;
+  font-style: italic;
+  padding-right: .5em;
+  
+}
