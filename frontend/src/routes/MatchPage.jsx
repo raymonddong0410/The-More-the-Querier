@@ -17,7 +17,6 @@ function MatchesPage() {
         const fetchTeamDetails = async () => {
             try {
                 const response = await axios.get(`/teamDetails/${teamID}`);
-                console.log(response)
                 setTeamDetails(response.data.team);
             } catch (err) {
                 console.error("Failed to get team information", err);
@@ -38,23 +37,13 @@ function MatchesPage() {
             }
         };
 
-        fetchTeamMatches();
         fetchTeamDetails();
+        fetchTeamMatches();
     }, [teamID]);
-
-    const getTeamNameForMatch = (team1ID, team2ID) => {
-        const isTeam1Requested = parseInt(team1ID) === parseInt(teamID);
-        return {
-            requestedTeam: isTeam1Requested ? 'team1' : 'team2',
-            opponentTeam: isTeam1Requested ? 'team2' : 'team1'
-        };
-    };
 
     const determineMatchResult = (match) => {
         if (!match.finalScore) return 'Upcoming';
-        
-        const teamPosition = getTeamNameForMatch(match.team1ID, match.team2ID);
-        
+
         if (match.winner === null) return 'Draw';
         if (match.winner === parseInt(teamID)) return 'Won';
         return 'Lost';
@@ -104,22 +93,15 @@ function MatchesPage() {
                             </tr>
                         ) : (
                             matches.map((match) => {
-                                const teamPosition = getTeamNameForMatch(match.team1ID, match.team2ID);
-                                const opponentTeamID = teamPosition.requestedTeam === 'team1' ? match.team2ID : match.team1ID;
                                 const result = determineMatchResult(match);
+                                const opponentName = parseInt(match.team1ID) === parseInt(teamID)
+                                    ? match.team2Name
+                                    : match.team1Name;
 
                                 return (
-                                    <tr 
-                                        key={match.matchID} 
-                                        className="border-b hover:bg-gray-50 cursor-pointer"
-                                        onClick={() => navigate(`/match/${match.matchID}`)}
-                                    >
+                                    <tr key={match.matchID}>
                                         <td className="p-3">{new Date(match.matchDate).toLocaleDateString()}</td>
-                                        <td className="p-3">
-                                            {teamPosition.requestedTeam === 'team1' 
-                                                ? 'Home vs ' + teamDetails.teamName 
-                                                : teamDetails.teamName + ' vs Away'}
-                                        </td>
+                                        <td className="p-3">{opponentName}</td>
                                         <td className="p-3 text-center">
                                             {match.finalScore || 'N/A'}
                                         </td>
