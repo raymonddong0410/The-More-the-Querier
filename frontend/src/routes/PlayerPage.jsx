@@ -3,7 +3,6 @@ import { Navigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
 
-// axios.defaults.baseURL = 'https://themorethequerier.online/backend';
 axios.defaults.baseURL = 'http://localhost:3000/backend';
 
 function PlayerPage() {

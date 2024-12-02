@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useEffect } from 'react';
 
-// axios.defaults.baseURL = 'https://themorethequerier.online/backend';
 axios.defaults.baseURL = 'http://localhost:3000/backend';
 
 function TeamPage() {
@@ -42,14 +40,26 @@ function TeamPage() {
         navigate(`/player/${playerID}`);
     };
 
+    const handleMatchesClick = () => {
+        navigate(`/team/${teamID}/matches`);
+    };
+
 
     return(
         <div className="min-h-screen bg-gray-100 p-6">
         {/* Team Banner */}
-        <div className="bg-blue-600 text-white p-4 mb-6 rounded-lg shadow-md">
-            <h1 className="text-xl font-bold">User: {teamDetails.username}</h1>
-            <h1 className="text-xl font-bold">League: {teamDetails.leagueName}</h1>
-            <h1 className="text-xl font-bold">Team: {teamDetails.teamName}</h1>
+        <div className="bg-blue-600 text-white p-4 mb-6 rounded-lg shadow-md flex justify-between items-center">
+            <div>
+                <h1 className="text-xl font-bold">User: {teamDetails.username}</h1>
+                <h1 className="text-xl font-bold">League: {teamDetails.leagueName}</h1>
+                <h1 className="text-xl font-bold">Team: {teamDetails.teamName}</h1>
+            </div>
+            <button 
+                onClick={handleMatchesClick}
+                className="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition duration-300"
+            >
+                View Matches
+            </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
