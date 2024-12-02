@@ -12,6 +12,7 @@ axios.defaults.baseURL = 'http://localhost:3000/backend';
 function HomePage() {
     const [username, setUsername] = useState('');
     const [myLeagues, setMyLeagues] = useState([]);
+    const [sortLeagues, setSortLeagues] = useState([]);
     const [matches, setMatches] = useState([]);
     const navigate = useNavigate();
     const [profileSettings, setProfileSettings] = useState({
@@ -78,6 +79,26 @@ function HomePage() {
       navigate(`/team/${teamID}/matches`);
     };
 
+
+
+    const handleSort = (key) => {
+      let direction = 'asc';
+      if (sortLeagues.key === key && sortLeagues.direction === 'asc') {
+        direction = 'desc';
+      }
+      setSortLeagues({ key, direction });
+    };
+
+  const sortedLeagues = [...myLeagues].sort((a, b) => {
+    if (a[sortLeagues.key] < b[sortLeagues.key]) {
+      return sortLeagues.direction === 'asc' ? -1 : 1;
+    }
+    if (a[sortLeagues.key] > b[sortLeagues.key]) {
+      return sortLeagues.direction === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+
     return(
         <div>
       {/* Username Banner */}
@@ -107,6 +128,9 @@ function HomePage() {
           <table className="table-full-width">
           <thead>
             <tr className="table-header-row">
+               <th className="table-header-cell" onClick={() => handleSort('leagueName')} style={{ cursor: 'pointer' }}>
+                League Name {sortLeagues.key === 'leagueName' ? (sortLeagues.direction === 'asc' ? '↑' : '↓') : ''}
+              </th>
               <th className="table-header-cell">League Name</th>
               <th className="table-header-cell">Type</th>
               <th className="table-header-cell">Max Teams</th>
@@ -114,7 +138,7 @@ function HomePage() {
             </tr>
           </thead>
           <tbody>
-            {myLeagues.map((league) => (
+            {sortedLeagues.map((league) => (
               <tr key={league.leagueID} className="table-body-row" onClick={() => handleRowClick(league.leagueID)} style={{ cursor: 'pointer' }} >
                 <td className="table-body-cell-value">
                     {league.leagueName}
