@@ -13,12 +13,7 @@ module.exports = (pool) => {
             return res.status(400).json({ error: 'All fields are required.' });
         }
     
-        const query = `
-            INSERT INTO profileSetting (userID, favoriteSport, aboutMe)
-            VALUES (?, ?, ?)
-            ON DUPLICATE KEY UPDATE 
-                favoriteSport = VALUES(favoriteSport), 
-                aboutMe = VALUES(aboutMe)`;
+        const query = `CALL updateProfileSetting(?, ?, ?)`;
 
         pool.query(query, [userID, favoriteSport, aboutMe], (err, results) => {
             if (err) {

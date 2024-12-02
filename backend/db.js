@@ -118,7 +118,24 @@ async function createTables(pool) {
             PRIMARY KEY (playerID, teamID),
             FOREIGN KEY (playerID) REFERENCES player(playerID),
             FOREIGN KEY (teamID) REFERENCES team(teamID)
-        )`
+        )`,
+
+        `
+        CREATE OR REPLACE PROCEDURE updateProfileSetting (
+            IN thisUserID INT,
+            IN favoriteSport VARCHAR(255),
+            IN newAbout VARCHAR(255)
+        )
+        BEGIN
+            INSERT INTO profileSetting (userID, favoriteSport, aboutMe)
+            VALUES (thisUserID, favoriteSport, newAbout)
+            ON DUPLICATE KEY UPDATE
+                favoriteSport = VALUES(favoriteSport),
+                aboutMe = VALUES(aboutMe);
+
+            SELECT 'ProfileSetting updated successfully!' AS message;
+        END;
+        `
     ];
 
     for (const query of queries) {
