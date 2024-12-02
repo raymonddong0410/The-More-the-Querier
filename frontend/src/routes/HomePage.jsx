@@ -74,6 +74,10 @@ function HomePage() {
       navigate(`/league/${leagueID}`);
     };
 
+    const handleMatchClick = (teamID) => {
+      navigate(`/team/${teamID}/matches`);
+    };
+
     return(
         <div>
       {/* Username Banner */}
@@ -150,7 +154,7 @@ function HomePage() {
               </thead>
               <tbody>
                 {matches.map((match) => (
-                  <tr key={match.matchID} className="table-body-row">
+                  <tr key={match.matchID} className="table-body-row" onClick={() => handleMatchClick(match.userTeamID)} style={{ cursor: 'pointer' }}>
                     <td className="table-body-cell-value">{new Date(match.matchDate).toLocaleDateString()}</td>
                     <td className="table-body-cell-value">{match.team1Name}</td>
                     <td className="table-body-cell-value">{match.team2Name}</td>
