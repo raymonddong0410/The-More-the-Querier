@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #616a74;;
+    background-color: #365d81;;
     color: white;
     padding: 1rem 2rem;
     position: fixed;
@@ -52,7 +52,7 @@
     border-radius: 5px;
     font-size: 1rem;
     margin-left: 2rem;
-    margin-right: 4rem; 
+    margin-right: rem; 
 }
 
 .logout-container {

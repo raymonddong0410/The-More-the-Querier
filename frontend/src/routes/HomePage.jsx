@@ -3,6 +3,8 @@ import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
 import {Link} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 // axios.defaults.baseURL = 'https://themorethequerier.online/backend';
 axios.defaults.baseURL = 'http://localhost:3000/backend';
@@ -11,6 +13,7 @@ function HomePage() {
     const [username, setUsername] = useState('');
     const [myLeagues, setMyLeagues] = useState([]);
     const [matches, setMatches] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -44,61 +47,63 @@ function HomePage() {
             }
         }
 
+        
+
+        
+
         fetchUserData();
         fetchMyLeagues();
         fetchMatches()
     }, []);
 
+    const handleRowClick = (leagueID) => {
+      navigate(`/league/${leagueID}`);
+    };
+
     return(
-        <div className="min-h-screen bg-gray-100 p-6">
+        <div>
       {/* Username Banner */}
-      <div className="bg-blue-600 text-white p-4 mb-6 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold">Welcome, {username}!</h1>
+      <div>
+        <h1 className="welcome">Welcome, {username}!</h1>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div >
         {/* Leagues Table */}
-        <div className="bg-white rounded-lg shadow-md">
-          <div className="p-4 border-b">
-            <h2 className="text-xl font-semibold">My Leagues</h2>
+        <div >
+          <div>
+            <h2>My Leagues</h2>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-gray-100 text-left">
-                  <th className="p-3">League Name</th>
-                  <th className="p-3">Type</th>
-                  <th className="p-3">Max Teams</th>
-                  <th className="p-3">Draft Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {myLeagues.map((league) => (
-                <tr key={league.leagueID} className="border-b hover:bg-gray-50">
-                  <td className="p-3">
-                    <Link to={`/league/${league.leagueID}`} className="text-blue-600 hover:underline">
-                      {league.leagueName}
-                    </Link>
-                  </td>
-                  <td className="p-3">
-                    <Link to={`/league/${league.leagueID}`} className="text-blue-600 hover:underline">
-                      {league.leagueType === 'P' ? 'Public' : league.leagueType === 'R' ? 'Private' : 'Unknown'}
-                    </Link>
-                  </td>
-                  <td className="p-3">
-                    <Link to={`/league/${league.leagueID}`} className="text-blue-600 hover:underline">
-                      {league.maxTeams}
-                    </Link>
-                  </td>
-                  <td className="p-3">
-                    <Link to={`/league/${league.leagueID}`} className="text-blue-600 hover:underline">
-                      {league.draftDate ? new Date(league.draftDate).toLocaleDateString() : 'TBD'}
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-            </table>
+          <table className="table-full-width">
+          <thead>
+            <tr className="table-header-row">
+              <th className="table-header-cell">League Name</th>
+              <th className="table-header-cell">Type</th>
+              <th className="table-header-cell">Max Teams</th>
+              <th className="table-header-cell">Draft Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {myLeagues.map((league) => (
+              <tr key={league.leagueID} className="table-body-row" onClick={() => handleRowClick(league.leagueID)} style={{ cursor: 'pointer' }} >
+                <td className="table-body-cell-value">
+                    {league.leagueName}
+                </td>
+                <td className="table-body-cell-value">
+                    {league.leagueType === 'P' ? 'Public' : league.leagueType === 'R' ? 'Private' : 'Unknown'}
+                </td>
+                <td className="table-body-cell-value">
+                    {league.maxTeams}
+                </td>
+                <td className="table-body-cell-value">
+                
+                    {league.draftDate ? new Date(league.draftDate).toLocaleDateString() : 'TBD'}
+                
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
           </div>
         </div>
 
