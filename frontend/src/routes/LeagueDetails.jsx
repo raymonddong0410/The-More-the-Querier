@@ -61,22 +61,22 @@ function LeagueDetails() {
             {teams.length === 0 ? (
                 <p>No teams in this league yet.</p>
             ) : (
-                <table>
+                <table className="table-full-width">
                     <thead>
-                        <tr>
-                            <th>Team Name| </th>
-                            <th>Total Points| </th>
-                            <th>Ranking| </th>
-                            <th>Actions</th>
+                        <tr className="table-header-row">
+                            <th className="table-header-cell" >Team Name</th>
+                            <th className="table-header-cell" >Total Points</th>
+                            <th className="table-header-cell" >Ranking</th>
+                            <th className="table-header-cell" >Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {teams.map((team) => (
-                            <tr key={team.teamID}>
-                                <td>{team.teamName}</td>
-                                <td>{team.totalPoints || 0}</td>
-                                <td>{team.ranking || 'N/A'}</td>
-                                <td>
+                            <tr className="table-body-row" key={team.teamID}>
+                                <td className="table-body-cell-value">{team.teamName}</td>
+                                <td className="table-body-cell-value" >{team.totalPoints || 0}</td>
+                                <td className="table-body-cell-value">{team.ranking || 'N/A'}</td>
+                                <td className="table-body-cell-value">
                                     <button onClick={() => handleTeamClick(team.teamID)}>
                                         View Team
                                     </button>
