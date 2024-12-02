@@ -143,7 +143,7 @@ function HomePage() {
             <h2 className="text-xl font-semibold">Matches</h2>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="table-full-width">
               <thead>
               <tr className="table-header-row">
                 <th className="table-header-cell">Date</th>
