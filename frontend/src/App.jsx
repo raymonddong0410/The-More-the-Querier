@@ -11,6 +11,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LeagueList from './routes/LeagueList';
 import LeagueDetails from './routes/LeagueDetails';
 import ProfileSettings from './routes/ProfileSettings';
+import MatchPage from './routes/MatchPage';
 import './App.css';
 function App() {
     const [authState, setAuthState] = useState({
@@ -104,6 +105,14 @@ function App() {
                     }
                 />
 
+                <Route
+                    path="/team/:teamID/matches"
+                    element={
+                        <ProtectedRoute loggedIn={authState.loggedIn}>
+                            <MatchPage />
+                        </ProtectedRoute>
+                    }
+                />
                 
                 <Route
                     path="/profileSettings"

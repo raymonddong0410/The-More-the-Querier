@@ -41,6 +41,7 @@ initializeDatabase(pool)
 
         app.use('/backend/teamDetails', require('./routes/getTeamDetails')(pool));
         app.use('/backend/teamPlayers', require('./routes/getTeamPlayers')(pool));
+        app.use('/backend/teamMatches', require('./routes/getTeamMatches')(pool));
 
         app.use('/backend/player', require('./routes/getPlayerDetails')(pool));
 
