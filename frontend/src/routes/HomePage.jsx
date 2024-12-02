@@ -71,7 +71,7 @@ function HomePage() {
         {/* Leagues Table */}
         <div >
           <div>
-            <h2>My Leagues</h2>
+            <h2 classname="league-header">My Leagues</h2>
           </div>
           <div className="overflow-x-auto">
           <table className="table-full-width">
