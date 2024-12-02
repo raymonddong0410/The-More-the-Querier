@@ -27,12 +27,10 @@ function Navbar({ loggedIn, isAdmin, onLogout }) {
                         <>
                             <li><Link to="/league">Leagues</Link></li>
                             <li><Link to="/draft">Draft</Link></li>
-                            <li><Link to="/dashboard">Dashboard</Link></li>
-                            <li><Link to="/about">About</Link></li>
                             <li><Link to="/profileSettings">Profile Settings</Link></li>
                             {/* Only render Admin Panel if isAdmin is true */}
 
-                            {isAdmin && (
+                            {Boolean(isAdmin) && (
                             <li><Link to="/admin">Admin Panel</Link></li>
                         )}
 

@@ -51,9 +51,13 @@
     font-weight: bold;
     border-radius: 5px;
     font-size: 1rem;
-    margin-left: auto;
-    margin-right: 4rem;
-    
+    margin-left: 2rem;
+    margin-right: 4rem; 
+}
+
+.logout-container {
+    display: flex;
+    align-items: center;
 }
 
 .logout-button:hover {
