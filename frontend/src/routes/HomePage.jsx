@@ -14,6 +14,10 @@ function HomePage() {
     const [myLeagues, setMyLeagues] = useState([]);
     const [matches, setMatches] = useState([]);
     const navigate = useNavigate();
+    const [profileSettings, setProfileSettings] = useState({
+      favoriteSport: '',
+      aboutMe: ''
+    });
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -47,6 +51,15 @@ function HomePage() {
             }
         }
 
+        const fetchProfileSettings = async () => {
+          try {
+              const response = await axios.get('/profileSettings');
+              setProfileSettings(response.data); 
+          } catch (err) {
+              console.error("Failed to get Profile Settings", err);
+          }
+      };
+
         
 
         
@@ -54,6 +67,7 @@ function HomePage() {
         fetchUserData();
         fetchMyLeagues();
         fetchMatches()
+        fetchProfileSettings();
     }, []);
 
     const handleRowClick = (leagueID) => {
@@ -67,13 +81,23 @@ function HomePage() {
         <h1 className="welcome">Welcome, {username}!</h1>
       </div>
 
+      {/* Profile Settings */} 
+      <div className="profile-settings-box">
+                <div className="profile-content">
+                    <p><strong className="aboutMe">About Me:</strong> {profileSettings.aboutMe || 'Not set'}</p>
+                    <p><strong className="aboutMe">Favorite Sport:</strong> {profileSettings.favoriteSport || 'Not set'}</p>
+                   
+                </div>
+      </div>
+
+
       
 
       <div >
         {/* Leagues Table */}
         <div >
           <div>
-            <h2 classname="league-header">My Leagues</h2>
+            <h2 className="league-header">My Leagues</h2>
           </div>
           <div className="overflow-x-auto">
           <table className="table-full-width">
