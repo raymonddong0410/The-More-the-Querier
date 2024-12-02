@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import AuthRoutes from './routes/AuthRoutes';
-import AboutPage from './routes/AboutPage';
 import HomePage from './routes/HomePage';
 import TeamPage from './routes/TeamPage';
 import PlayerPage from './routes/PlayerPage';
-import DashboardPage from './routes/DashboardPage';
 import AdminRoutes from './routes/AdminRoutes';
 import Navbar from './components/Navbar/Navbar';
 import { isLoggedIn, logout } from './utils/auth';
@@ -62,17 +60,9 @@ function App() {
                     />
                 }/>
 
-                <Route path="/about" element={<AboutPage />} />
 
                 {/* User-Specific Routes */}
-                <Route
-                    path="/dashboard"
-                    element={
-                        <ProtectedRoute loggedIn={authState.loggedIn}>
-                            <DashboardPage />
-                        </ProtectedRoute>
-                    }
-                />
+            
                 <Route
                     path="/home"
                     element={
