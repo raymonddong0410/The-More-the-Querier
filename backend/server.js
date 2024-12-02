@@ -33,6 +33,7 @@ initializeDatabase(pool)
 
         app.use('/backend/profileSettings', require('./routes/profileSettings')(pool));
         app.use('/backend/updateProfileSettings', require('./routes/updateProfileSettings')(pool));
+        app.use('/backend/deleteAccount', require('./routes/deleteAccount')(pool));
 
         app.use('/backend/fetchUserData', require('./routes/fetchUserData')(pool));
         app.use('/backend/userLeagues', require('./routes/getUserLeagues')(pool));
@@ -46,7 +47,6 @@ initializeDatabase(pool)
         app.use('/backend/player', require('./routes/getPlayerDetails')(pool));
 
         app.use('/backend/admin', verifyToken, require('./routes/admin')(pool));
-
 
         // Start the server
         app.listen(port, () => {

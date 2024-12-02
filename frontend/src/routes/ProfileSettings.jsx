@@ -15,6 +15,8 @@ const ProfileSettings = () => {
 
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [deleteConfirmation, setDeleteConfirmation] = useState('');
 
     useEffect(() => {
         const fetchProfileSettings = async () => {
@@ -65,6 +67,17 @@ const ProfileSettings = () => {
         }
     };
 
+    const handleAccountDeletion = async () => {
+        try {
+            await axios.delete('/deleteAccount');
+            // Redirect to login or home page after successful deletion
+            window.location.href = '/';
+        } catch (error) {
+            console.error('Error deleting account:', error);
+            alert('Failed to delete account. Please try again.');
+        }
+    };
+
     return (
         <div className="profileSettings">
             <h1>Profile Settings</h1>
@@ -104,6 +117,49 @@ const ProfileSettings = () => {
                 </button>
                 {saved && <div className="successMessage">Profile settings saved successfully!</div>}
             </form>
+
+            <div className="account-deletion-section">
+                <h2>Account Deletion</h2>
+                <button 
+                    onClick={() => setDeleteModalOpen(true)} 
+                    className="delete-account-button"
+                >
+                    Delete Account
+                </button>
+
+                {deleteModalOpen && (
+                    <div className="delete-modal">
+                        <div className="delete-modal-content">
+                            <h3>Delete Account</h3>
+                            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+                            <p>Please type "DELETE" to confirm:</p>
+                            <input 
+                                type="text" 
+                                value={deleteConfirmation}
+                                onChange={(e) => setDeleteConfirmation(e.target.value)}
+                                className="delete-confirmation-input"
+                            />
+                            <div className="delete-modal-buttons">
+                                <p></p>
+                                <button 
+                                    onClick={() => setDeleteModalOpen(false)}
+                                    className="cancel-button"
+                                >
+                                    Cancel
+                                </button>
+                                <p></p>
+                                <button 
+                                    onClick={handleAccountDeletion}
+                                    disabled={deleteConfirmation !== 'DELETE'}
+                                    className="confirm-delete-button"
+                                >
+                                    Confirm Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
