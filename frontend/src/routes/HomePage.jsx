@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
+import {Link} from 'react-router-dom';
 
 // axios.defaults.baseURL = 'https://themorethequerier.online/backend';
 axios.defaults.baseURL = 'http://localhost:3000/backend';
@@ -73,17 +74,30 @@ function HomePage() {
               </thead>
               <tbody>
                 {myLeagues.map((league) => (
-                  <tr key={league.leagueID} className="border-b hover:bg-gray-50">
-                    <td className="p-3">{league.leagueName}</td>
-                    <td className="p-3">
-                      {league.leagueType === 'P' ? 'Public' : 
-                       league.leagueType === 'R' ? 'Private' : 'Unknown'}
-                    </td>
-                    <td className="p-3">{league.maxTeams}</td>
-                    <td className="p-3">{league.draftDate ? new Date(league.draftDate).toLocaleDateString() : 'TBD'}</td>
-                  </tr>
-                ))}
-              </tbody>
+                <tr key={league.leagueID} className="border-b hover:bg-gray-50">
+                  <td className="p-3">
+                    <Link to={`/league/${league.leagueID}`} className="text-blue-600 hover:underline">
+                      {league.leagueName}
+                    </Link>
+                  </td>
+                  <td className="p-3">
+                    <Link to={`/league/${league.leagueID}`} className="text-blue-600 hover:underline">
+                      {league.leagueType === 'P' ? 'Public' : league.leagueType === 'R' ? 'Private' : 'Unknown'}
+                    </Link>
+                  </td>
+                  <td className="p-3">
+                    <Link to={`/league/${league.leagueID}`} className="text-blue-600 hover:underline">
+                      {league.maxTeams}
+                    </Link>
+                  </td>
+                  <td className="p-3">
+                    <Link to={`/league/${league.leagueID}`} className="text-blue-600 hover:underline">
+                      {league.draftDate ? new Date(league.draftDate).toLocaleDateString() : 'TBD'}
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
             </table>
           </div>
         </div>
