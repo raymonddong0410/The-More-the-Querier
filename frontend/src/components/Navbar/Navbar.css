@@ -52,12 +52,12 @@
     border-radius: 5px;
     font-size: 1rem;
     margin-left: 2rem;
-    margin-right: rem; 
+    margin-right: 2rem; 
 }
 
 .logout-container {
     display: flex;
-    align-items: center;
+    padding-right: 2rem;
 }
 
 .logout-button:hover {
