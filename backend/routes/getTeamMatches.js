@@ -1,10 +1,9 @@
 const express = require('express');
-const verifyToken = require('../middleware/verifyToken');
 
 module.exports = (pool) => {
     const router = express.Router();
 
-    router.get('/:teamID', verifyToken, async (req, res) => {
+    router.get('/:teamID', async (req, res) => {
         const teamID = req.params.teamID;
 
             // Query to fetch matches for a specific team
