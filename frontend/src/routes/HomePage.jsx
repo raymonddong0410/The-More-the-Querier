@@ -67,6 +67,8 @@ function HomePage() {
         <h1 className="welcome">Welcome, {username}!</h1>
       </div>
 
+      
+
       <div >
         {/* Leagues Table */}
         <div >
@@ -115,20 +117,20 @@ function HomePage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-100 text-left">
-                  <th className="p-3">Date</th>
-                  <th className="p-3">Team 1</th>
-                  <th className="p-3">Team 2</th>
-                  <th className="p-3">League</th>
+              <tr className="table-header-row">
+                <th className="table-header-cell">Date</th>
+                <th className="table-header-cell">Team 1</th>
+                <th className="table-header-cell">Team 2</th>
+                <th className="table-header-cell">League</th>
                 </tr>
               </thead>
               <tbody>
                 {matches.map((match) => (
-                  <tr key={match.matchID} className="border-b hover:bg-gray-50">
-                    <td className="p-3">{new Date(match.matchDate).toLocaleDateString()}</td>
-                    <td className="p-3">{match.team1Name}</td>
-                    <td className="p-3">{match.team2Name}</td>
-                    <td className="p-3">{match.leagueName}</td>
+                  <tr key={match.matchID} className="table-body-row">
+                    <td className="table-body-cell-value">{new Date(match.matchDate).toLocaleDateString()}</td>
+                    <td className="table-body-cell-value">{match.team1Name}</td>
+                    <td className="table-body-cell-value">{match.team2Name}</td>
+                    <td className="table-body-cell-value">{match.leagueName}</td>
                   </tr>
                 ))}
               </tbody>

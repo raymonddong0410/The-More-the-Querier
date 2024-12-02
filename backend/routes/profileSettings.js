@@ -1,27 +1,58 @@
 const express = require('express');
-const verifyToken = require('../middleware/verifyToken');  
-
+const verifyToken = require('../middleware/verifyToken');
 
 module.exports = (pool) => {
     const router = express.Router();
 
-    router.get('/', verifyToken, (req, res) => {
+    // PUT endpoint to update profile settings
+    router.put('/', verifyToken, (req, res) => {
         const userID = req.user.userID;
-        
-        pool.query('SELECT * FROM users WHERE userID = ?', [userID], (err, results) => {
-        if (err) {
-            console.error('Database error:', err);
-            return res.status(500).json({ error: 'Failed to fetch user data.' });
+        const { favoriteSport, aboutMe } = req.body;
+    
+        if (!favoriteSport || !aboutMe) {
+            return res.status(400).json({ error: 'All fields are required.' });
         }
-        
-        if (results.length === 0) {
-            return res.status(404).json({ error: 'User not found.' });
-        }
-        
-        const user = results[0];
-            res.status(200).json({ user });
+    
+        const query = `
+            INSERT INTO profileSetting (userID, favoriteSport, aboutMe)
+            VALUES (?, ?, ?)
+            ON DUPLICATE KEY UPDATE 
+                favoriteSport = VALUES(favoriteSport), 
+                aboutMe = VALUES(aboutMe)`;
+
+        pool.query(query, [userID, favoriteSport, aboutMe], (err, results) => {
+            if (err) {
+                console.error('Database error:', err);
+                return res.status(500).json({ error: 'Failed to save profile settings' });
+            }
+
+            res.status(200).json({ message: 'Profile settings updated successfully.' });
         });
     });
-        
+
+    // GET endpoint to retrieve profile settings
+    router.get('/', verifyToken, (req, res) => {
+        const userID = req.user.userID;
+
+        const query = `
+            SELECT favoriteSport, aboutMe 
+            FROM profileSetting 
+            WHERE userID = ?`;
+
+        pool.query(query, [userID], (err, results) => {
+            if (err) {
+                console.error('Database error:', err);
+                return res.status(500).json({ error: 'Failed to fetch profile settings' });
+            }
+
+            if (results.length === 0) {
+                return res.status(404).json({ error: 'Profile settings not found' });
+            }
+
+            const { favoriteSport, aboutMe } = results[0];
+            res.status(200).json({ favoriteSport, aboutMe });
+        });
+    });
+
     return router;
-}
+};
