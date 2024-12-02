@@ -9,8 +9,10 @@ function LeagueList() {
     const [page, setPage] = useState(1);
     const leaguesPerPage = 10; // Customize the number of leagues per page
     const [showModal, setShowModal] = useState(false);
+    const [leagueCreated, setLeagueCreated] = useState(false);
 
     useEffect(() => {
+        setLeagueCreated(false)
         async function fetchLeagues() {
             try {
                 const response = await axios.get('/league'); // Fetch all leagues
@@ -21,7 +23,7 @@ function LeagueList() {
             }
         }
         fetchLeagues();
-    }, []);
+    }, [leagueCreated]);
 
     const loadMoreLeagues = () => {
         const nextPage = page + 1;
@@ -32,7 +34,9 @@ function LeagueList() {
     return (
         <div>
             <h1>Leagues</h1>
-            <button onClick={() => setShowModal(true)}>Create League</button>
+            <button onClick={() => {
+                setShowModal(true)
+                }}>Create League</button>
             <ul>
                 {visibleLeagues.map((league) => (
                     <li key={league.leagueID}>
@@ -43,7 +47,10 @@ function LeagueList() {
             {visibleLeagues.length < allLeagues.length && (
                 <button onClick={loadMoreLeagues}>Load More</button>
             )}
-            {showModal && <CreateLeagueModal onClose={() => setShowModal(false)} />}
+            {showModal && <CreateLeagueModal onClose={() => {
+                setShowModal(false)
+                setLeagueCreated(true)}
+            } />}
         </div>
     );
 }

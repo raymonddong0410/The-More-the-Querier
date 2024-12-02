@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router';
 
-function CreateTeamModal({ leagueID, onClose, onTeamCreated }) {
+function CreateTeamModal({ onClose, onTeamCreated }) {
     const [teamName, setTeamName] = useState('');
     const [error, setError] = useState('');
+    const { leagueID } = useParams();
 
     const handleSubmit = async () => {
         // Validate team name length
@@ -18,19 +20,8 @@ function CreateTeamModal({ leagueID, onClose, onTeamCreated }) {
         }
 
         try {
-            console.log('Submitting team creation with data:', {
+            const response = await axios.post(`/league/${leagueID}/createTeam`, {  
                 teamName,
-                leagueID: parseInt(leagueID, 10),
-                owner: 1, // Replace with actual logged-in user ID
-                totalPoints: 0,
-                ranking: null,
-                status: 'A'
-            });
-
-            const response = await axios.post('/createTeam', {  
-                teamName,
-                leagueID: parseInt(leagueID, 10), // Convert to INT
-                owner: 1, // Replace with actual logged-in user ID
                 totalPoints: 0, // Initialize total points to 0
                 ranking: null, // Initially no ranking
                 status: 'A' // Assuming 'A' for active
