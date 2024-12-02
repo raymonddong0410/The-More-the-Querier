@@ -12,7 +12,6 @@ function CreateLeagueModal({ onClose }) {
             const response = await axios.post('/league', {
                 leagueName,
                 leagueType,
-                commissioner: 1, // Replace with actual logged-in user ID
                 maxTeams,
                 draftDate,
             });

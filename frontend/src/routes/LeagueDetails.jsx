@@ -73,7 +73,7 @@ function LeagueDetails() {
                     <tbody>
                         {teams.map((team) => (
                             <tr key={team.teamID}>
-                                <td>   {team.teamName}</td>
+                                <td>{team.teamName}</td>
                                 <td>{team.totalPoints || 0}</td>
                                 <td>{team.ranking || 'N/A'}</td>
                                 <td>
@@ -90,7 +90,6 @@ function LeagueDetails() {
             {/* Conditionally render the Create Team Modal */}
             {isCreateTeamModalOpen && (
                 <CreateTeamModal 
-                    leagueID={leagueID}
                     onClose={() => setIsCreateTeamModalOpen(false)}
                     onTeamCreated={fetchTeams}
                 />

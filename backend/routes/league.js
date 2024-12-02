@@ -1,4 +1,5 @@
 const express = require('express');
+const verifyToken = require('../middleware/verifyToken')
 
 module.exports = (pool) => {
     const router = express.Router();
@@ -57,12 +58,14 @@ module.exports = (pool) => {
     });
 
     // Create a new league
-    router.post('/', (req, res) => {
-        const { leagueName, leagueType, commissioner, maxTeams, draftDate } = req.body;
+    router.post('/', verifyToken, (req, res) => {
+        const { leagueName, leagueType, maxTeams, draftDate } = req.body;
 
-        if (!leagueName || !leagueType || !commissioner || !maxTeams) {
+        if (!leagueName || !leagueType || !maxTeams) {
             return res.status(400).json({ error: 'Missing required fields.' });
         }
+
+        const commissioner = req.user.userID;
 
         const query = `
             INSERT INTO league (leagueName, leagueType, commissioner, maxTeams, draftDate)
@@ -80,6 +83,30 @@ module.exports = (pool) => {
             }
         );
     });
+
+    router.post('/:leagueID/createTeam', verifyToken, (req, res) => {
+        const { teamName, totalPoints, ranking, status } = req.body;
+
+        const owner = req.user.userID;
+        const leagueID = req.params.leagueID;
+
+        const query = `
+            INSERT INTO team (teamName, leagueID, owner, totalPoints, ranking, status)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+
+        pool.query(
+            query,
+            [teamName, leagueID, owner, totalPoints, ranking, status],
+            (err, result) => {
+                if (err) {
+                    console.error('Error creating team:', err);
+                    return res.status(500).json({ error: 'Failed to create team.' });
+                }
+                res.status(201).json({ message: 'Team created successfully', teamID: result.insertId });
+            }
+        );
+    })
 
     return router;
 };
