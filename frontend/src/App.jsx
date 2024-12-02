@@ -11,7 +11,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LeagueList from './routes/LeagueList';
 import LeagueDetails from './routes/LeagueDetails';
 import ProfileSettings from './routes/ProfileSettings';
-
+import './App.css';
 function App() {
     const [authState, setAuthState] = useState({
         loggedIn: false,

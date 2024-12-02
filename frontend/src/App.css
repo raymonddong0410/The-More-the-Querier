@@ -5,6 +5,7 @@
   text-align: center;
 }
 
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -33,6 +34,12 @@
   }
 }
 
+.welcome {
+  font-size: 4rem;
+  margin: 1em 0;
+  font-style: italic;
+}
+
 .card {
   padding: 2em;
 }
@@ -40,3 +47,43 @@
 .read-the-docs {
   color: #888;
 }
+
+.table-full-width {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+
+.table-header-row {
+  background-color: #ffff; 
+  text-align: left;
+}
+
+.table-header-cell {
+  padding: 1rem; 
+  font-weight: bold;
+  color: #545454; 
+  border-bottom: 2px solid #e5e7eb; 
+}
+
+/* Body row styling */
+.table-body-row {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+.table-body-row:hover {
+  background-color: #365d81; 
+}
+
+
+.table-body-cell {
+  padding: 1rem;
+  color: #4b5563; 
+}
+
+.table-body-cell-value{
+  padding: 1rem;
+  color: #e9f0ff; 
+}
+
