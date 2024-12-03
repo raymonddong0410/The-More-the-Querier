@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://themorethequerier.online/backend';
-// axios.defaults.baseURL = 'http://localhost:3000/backend';
+// axios.defaults.baseURL = 'https://themorethequerier.online/backend';
+axios.defaults.baseURL = 'http://localhost:3000/backend';
 
 function MatchesPage() {
     const [matches, setMatches] = useState([]);

@@ -3,6 +3,7 @@ import { Navigate, Link, Routes, Route } from 'react-router-dom';
 import ManageUsers from './ManageUsers';
 import ManageLeagues from './ManageLeagues';
 import ManagePlayers from './ManagePlayers';
+import ManageMatches from './ManageMatches';
 
 function AdminRoutes({ isAdmin }) {
     if (!isAdmin) {
@@ -18,6 +19,7 @@ function AdminRoutes({ isAdmin }) {
                     <li><Link to="/admin/manage-users">Manage Users</Link></li>
                     <li><Link to="/admin/manage-leagues">Manage Leagues</Link></li>
                     <li><Link to="/admin/manage-players">Manage Players</Link></li>
+                    <li><Link to="/admin/manage-matches">Manage Matches</Link></li>
                 </ul>
             </nav>
             <Routes>
@@ -25,6 +27,7 @@ function AdminRoutes({ isAdmin }) {
                 <Route path="manage-users" element={<ManageUsers />} />
                 <Route path="manage-leagues" element={<ManageLeagues />} />
                 <Route path="manage-players" element={<ManagePlayers />} />
+                <Route path="manage-matches" element={<ManageMatches />} />
             </Routes>
         </div>
     );
