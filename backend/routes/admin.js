@@ -154,5 +154,78 @@ module.exports = (pool) => {
         }
     });
 
+    // Grant privileges based on role
+    router.post('/grant', checkAdmin, async (req, res) => {
+        const { username, role } = req.body; // Expect 'username' and 'role' ('admin' or 'non-admin')
+
+        try {
+            // Dynamically use database name from environment variables
+            const databaseName = process.env.DB_NAME;
+
+            if (!databaseName) {
+                return res.status(500).json({ error: 'Database name is not defined in the environment variables.' });
+            }
+
+            let createUserQuery = `CREATE USER IF NOT EXISTS '${username}'@'localhost' IDENTIFIED BY 'defaultPassword';`;
+            let grantQuery;
+
+            // Adjust privileges based on role
+            if (role === 'admin') {
+                grantQuery = `GRANT ALL PRIVILEGES ON ${databaseName}.* TO '${username}'@'localhost';`;
+            } else if (role === 'non-admin') {
+                grantQuery = `GRANT SELECT, INSERT, UPDATE ON ${databaseName}.* TO '${username}'@'localhost';`;
+            } else {
+                return res.status(400).json({ error: 'Invalid role specified. Must be "admin" or "non-admin".' });
+            }
+
+            // Create the user if not exists
+            await pool.promise().query(createUserQuery);
+
+            // Grant privileges
+            await pool.promise().query(grantQuery);
+
+            res.status(200).json({ message: `Privileges granted to ${username} as ${role}.` });
+        } catch (error) {
+            console.error('Error granting privileges:', error);
+            res.status(500).json({ error: 'Failed to grant privileges.' });
+        }
+    });
+
+
+    // Revoke privileges based on role
+    router.post('/revoke', checkAdmin, async (req, res) => {
+        const { username, role } = req.body; // Expect 'username' and 'role' ('admin' or 'non-admin')
+
+        try {
+            // Dynamically use database name from environment variables
+            const databaseName = process.env.DB_NAME;
+
+            if (!databaseName) {
+                return res.status(500).json({ error: 'Database name is not defined in the environment variables.' });
+            }
+
+            let revokeQuery;
+
+            // Adjust revocation based on role
+            if (role === 'admin') {
+                revokeQuery = `REVOKE ALL PRIVILEGES ON ${databaseName}.* FROM '${username}'@'localhost';`;
+            } else if (role === 'non-admin') {
+                revokeQuery = `REVOKE SELECT, INSERT, UPDATE ON ${databaseName}.* FROM '${username}'@'localhost';`;
+            } else {
+                return res.status(400).json({ error: 'Invalid role specified. Must be "admin" or "non-admin".' });
+            }
+
+            // Revoke privileges
+            await pool.promise().query(revokeQuery);
+
+            res.status(200).json({ message: `Privileges revoked from ${username} (${role}).` });
+        } catch (error) {
+            console.error('Error revoking privileges:', error);
+            res.status(500).json({ error: 'Failed to revoke privileges.' });
+        }
+    });
+
+
+
     return router;
 };
