@@ -26,7 +26,9 @@ function CreateDraftModal({ leagueID, onClose, onDraftCreated }) {
         } catch (error) {
             console.error('Error creating draft:', error);
             setError(
-                error.response?.data?.error ||
+                error.response && error.response.data ? 
+    (error.response.data.error || error.response.data.error) : 
+    null ||
                 'An error occurred while creating the draft.'
             );
         }

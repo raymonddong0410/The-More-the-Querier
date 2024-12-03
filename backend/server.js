@@ -61,5 +61,6 @@ initializeDatabase(pool)
     })
     .catch((err) => {
         console.error('Database initialization failed:', err);
+        console.log(process.version);
         process.exit(1);
     });

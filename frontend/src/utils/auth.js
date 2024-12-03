@@ -15,8 +15,10 @@ export async function isLoggedIn() {
             };
         }
     } catch (error) {
-        console.error('Validation error:', error.response?.data || error.message);
-        if (error.response?.status === 401) {
+        console.error('Validation error:', 
+            (error.response && error.response.data) || error.message
+        );
+        if (error.response && error.response.status === 401) {
             try {
                 await axios.post('/refresh');
                 return true; // Successfully refreshed

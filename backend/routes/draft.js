@@ -139,7 +139,7 @@ module.exports = (pool) => {
                 [draftID, draft.picksMade]
             );
 
-            const currentTurnTeamID = currentTurnData?.[0]?.teamID;
+            const currentTurnTeamID = currentTurnData && currentTurnData[0] ? currentTurnData[0].teamID : null;
             if (!currentTurnTeamID) return res.status(400).json({ error: 'No valid draft turn found' });
 
             const [[team]] = await pool.promise().query('SELECT * FROM team WHERE teamID = ?', [currentTurnTeamID]);

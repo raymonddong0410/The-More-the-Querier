@@ -24,7 +24,7 @@ module.exports = (pool) => {
         }
 
         // Get the message from the function's result
-        const message = results[0]?.message || 'Profile settings updated successfully.';
+        const message = (results[0] && results[0].message) || 'Profile settings updated successfully.';
         res.status(200).json({ message });
     });
     });

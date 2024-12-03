@@ -24,7 +24,9 @@ function JoinLeagueModal({ leagueID, onClose, onJoined }) {
         } catch (error) {
             console.error('Error joining league:', error);
             setError(
-                error.response?.data?.error ||
+                error.response && error.response.data ? 
+    (error.response.data.error || error.response.data.error) : 
+    null ||
                 'An error occurred while joining the league.'
             );
         }

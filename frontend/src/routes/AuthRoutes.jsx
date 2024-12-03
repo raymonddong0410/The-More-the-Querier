@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 
-// axios.defaults.baseURL = 'https://themorethequerier.online/backend';
-axios.defaults.baseURL = 'http://localhost:3000/backend';
+axios.defaults.baseURL = 'https://themorethequerier.online/backend';
+// axios.defaults.baseURL = 'http://localhost:3000/backend';
 
 function AuthRoutes({ onLogin, loggedIn }) {
     const [showRegister, setShowRegister] = useState(false);
