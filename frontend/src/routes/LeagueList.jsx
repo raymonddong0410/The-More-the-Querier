@@ -10,8 +10,6 @@ function LeagueList() {
     const leaguesPerPage = 10; // Customize the number of leagues per page
     const [showModal, setShowModal] = useState(false);
     const [leagueCreated, setLeagueCreated] = useState(false);
-    
-    // New state for search
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
@@ -19,36 +17,44 @@ function LeagueList() {
             try {
                 const response = await axios.get('/league'); // Fetch all leagues
                 setAllLeagues(response.data);
-                setVisibleLeagues(response.data.slice(0, page * leaguesPerPage)); // Initialize with the first page
+                updateVisibleLeagues(response.data, page, searchTerm);
             } catch (error) {
                 console.error('Error fetching leagues:', error);
             }
         }
         fetchLeagues();
-    }, [leagueCreated, page]);
+    }, [leagueCreated]);
 
-    // New useEffect to handle search filtering
+    // Centralized method to update visible leagues
+    const updateVisibleLeagues = (leagues, currentPage, currentSearchTerm = '') => {
+        // First, filter leagues by search term if applicable
+        const filteredLeagues = currentSearchTerm 
+            ? leagues.filter(league => 
+                league.leagueName.toLowerCase().includes(currentSearchTerm.toLowerCase())
+              )
+            : leagues;
+
+        // Then slice based on current page
+        const startIndex = 0;
+        const endIndex = currentPage * leaguesPerPage;
+        const slicedLeagues = filteredLeagues.slice(startIndex, endIndex);
+
+        setVisibleLeagues(slicedLeagues);
+    };
+
     useEffect(() => {
-        // Filter leagues based on search term
-        const filteredLeagues = allLeagues.filter(league => 
-            league.leagueName.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-        // Reset page and visible leagues when search term changes
-        setPage(1);
-        setVisibleLeagues(filteredLeagues.slice(0, leaguesPerPage));
-    }, [searchTerm, allLeagues]);
+        // Update visible leagues when search term changes
+        updateVisibleLeagues(allLeagues, page, searchTerm);
+    }, [searchTerm, allLeagues, page]);
 
     const loadMoreLeagues = () => {
-        const nextPage = page + 1;
-        setPage(nextPage);
-        setVisibleLeagues(allLeagues.slice(0, nextPage * leaguesPerPage));
+        // Increment page and this will trigger the useEffect to update visible leagues
+        setPage(prevPage => prevPage + 1);
     };
 
     return (
         <div>
             <h1>Leagues</h1>
-            {/* Search input */}
             <input 
                 type="text" 
                 placeholder="Search leagues..." 
