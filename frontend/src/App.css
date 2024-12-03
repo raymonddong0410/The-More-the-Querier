@@ -144,3 +144,15 @@ button {
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+
+h2 {
+  font-size: 2rem;
+  margin: 1em 0;
+  color: #000000;
+}
+
+label {
+  display: block;
+  margin: 1em 0;
+  color: #000000;
+}
