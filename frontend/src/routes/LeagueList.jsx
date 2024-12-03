@@ -15,18 +15,17 @@ function LeagueList() {
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        setLeagueCreated(false)
         async function fetchLeagues() {
             try {
                 const response = await axios.get('/league'); // Fetch all leagues
                 setAllLeagues(response.data);
-                setVisibleLeagues(response.data.slice(0, leaguesPerPage)); // Initialize with the first page
+                setVisibleLeagues(response.data.slice(0, page * leaguesPerPage)); // Initialize with the first page
             } catch (error) {
                 console.error('Error fetching leagues:', error);
             }
         }
         fetchLeagues();
-    }, [leagueCreated]);
+    }, [leagueCreated, page]);
 
     // New useEffect to handle search filtering
     useEffect(() => {
@@ -49,7 +48,6 @@ function LeagueList() {
     return (
         <div>
             <h1>Leagues</h1>
-            
             {/* Search input */}
             <input 
                 type="text" 
@@ -58,11 +56,7 @@ function LeagueList() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="search-input"
             />
-
-            <button onClick={() => {
-                setShowModal(true)
-                }}>Create League</button>
-            
+            <button onClick={() => setShowModal(true)}>Create League</button>
             <ul>
                 {visibleLeagues.map((league) => (
                     <li key={league.leagueID}>
@@ -75,10 +69,14 @@ function LeagueList() {
                 <button onClick={loadMoreLeagues}>Load More</button>
             )}
             
-            {showModal && <CreateLeagueModal onClose={() => {
-                setShowModal(false)
-                setLeagueCreated(true)}
-            } />}
+            {showModal && (
+                <CreateLeagueModal
+                    onClose={() => {
+                        setShowModal(false);
+                        setLeagueCreated((prev) => !prev); // Trigger refresh
+                    }}
+                />
+            )}
         </div>
     );
 }

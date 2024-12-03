@@ -26,7 +26,8 @@ function Navbar({ loggedIn, isAdmin, onLogout }) {
                     {loggedIn && (
                         <>
                             <li><Link to="/league">Leagues</Link></li>
-                            <li><Link to="/draft">Draft</Link></li>
+                            <li><Link to="/draft">Drafts</Link></li>
+                            <li><Link to="/teams">Teams</Link></li>
                             <li><Link to="/profileSettings">Profile Settings</Link></li>
                             {/* Only render Admin Panel if isAdmin is true */}
 
