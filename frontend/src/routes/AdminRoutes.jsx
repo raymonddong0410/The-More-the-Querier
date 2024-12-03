@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, Link, Routes, Route } from 'react-router-dom';
 import ManageUsers from './ManageUsers';
 import ManageLeagues from './ManageLeagues';
+import ManagePlayers from './ManagePlayers';
 
 function AdminRoutes({ isAdmin }) {
     if (!isAdmin) {
@@ -16,12 +17,14 @@ function AdminRoutes({ isAdmin }) {
                 <ul>
                     <li><Link to="/admin/manage-users">Manage Users</Link></li>
                     <li><Link to="/admin/manage-leagues">Manage Leagues</Link></li>
+                    <li><Link to="/admin/manage-players">Manage Players</Link></li>
                 </ul>
             </nav>
             <Routes>
                 {/* Define the nested admin routes */}
                 <Route path="manage-users" element={<ManageUsers />} />
                 <Route path="manage-leagues" element={<ManageLeagues />} />
+                <Route path="manage-players" element={<ManagePlayers />} />
             </Routes>
         </div>
     );
