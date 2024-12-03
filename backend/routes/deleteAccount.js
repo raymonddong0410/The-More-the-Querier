@@ -21,6 +21,25 @@ module.exports = (pool) => {
                 }
 
                 const deletionQueries = [
+
+                    // Update matches to set team1ID and team2ID to NULL for teams in leagues owned by user
+                    // Update matches to set team1ID and team2ID to NULL for teams in leagues owned by user
+                    `UPDATE matches 
+                    SET team1ID = NULL 
+                    WHERE team1ID IN (
+                        SELECT teamID 
+                        FROM team 
+                        WHERE owner = ?
+                    )`,
+                    
+                    `UPDATE matches 
+                    SET team2ID = NULL 
+                    WHERE team2ID IN (
+                        SELECT teamID 
+                        FROM team 
+                        WHERE owner = ?
+                    );`,
+
                     // Delete playerTeam entries for all teams in leagues owned by user
                     'DELETE FROM playerTeam WHERE teamID IN (SELECT teamID FROM team WHERE leagueID IN (SELECT leagueID FROM league WHERE commissioner = ?))',
 
@@ -37,7 +56,7 @@ module.exports = (pool) => {
                     'DELETE FROM league WHERE commissioner = ?',
                     
                     // Remove user from teams as owner
-                    'UPDATE team SET owner = NULL WHERE owner = ?',
+                    `UPDATE team SET status = 'I' WHERE owner = ?`,
                     
                     // Delete profile settings
                     'DELETE FROM profileSetting WHERE userID = ?',
@@ -48,7 +67,11 @@ module.exports = (pool) => {
 
                 const executeQuery = (query) => {
                     return new Promise((resolve, reject) => {
-                        connection.query(query, [userID], (err) => {
+                        const params = query.includes('DELETE FROM matches') 
+                            ? [userID, userID]  // Two parameters for the matches deletion query
+                            : [userID];          // Single parameter for other queries
+                
+                        connection.query(query, params, (err) => {
                             if (err) reject(err);
                             else resolve();
                         });
