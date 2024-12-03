@@ -10,6 +10,9 @@ function LeagueList() {
     const leaguesPerPage = 10; // Customize the number of leagues per page
     const [showModal, setShowModal] = useState(false);
     const [leagueCreated, setLeagueCreated] = useState(false);
+    
+    // New state for search
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         setLeagueCreated(false)
@@ -25,6 +28,18 @@ function LeagueList() {
         fetchLeagues();
     }, [leagueCreated]);
 
+    // New useEffect to handle search filtering
+    useEffect(() => {
+        // Filter leagues based on search term
+        const filteredLeagues = allLeagues.filter(league => 
+            league.leagueName.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        // Reset page and visible leagues when search term changes
+        setPage(1);
+        setVisibleLeagues(filteredLeagues.slice(0, leaguesPerPage));
+    }, [searchTerm, allLeagues]);
+
     const loadMoreLeagues = () => {
         const nextPage = page + 1;
         setPage(nextPage);
@@ -34,9 +49,20 @@ function LeagueList() {
     return (
         <div>
             <h1>Leagues</h1>
+            
+            {/* Search input */}
+            <input 
+                type="text" 
+                placeholder="Search leagues..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+            />
+
             <button onClick={() => {
                 setShowModal(true)
                 }}>Create League</button>
+            
             <ul>
                 {visibleLeagues.map((league) => (
                     <li key={league.leagueID}>
@@ -44,9 +70,11 @@ function LeagueList() {
                     </li>
                 ))}
             </ul>
+            
             {visibleLeagues.length < allLeagues.length && (
                 <button onClick={loadMoreLeagues}>Load More</button>
             )}
+            
             {showModal && <CreateLeagueModal onClose={() => {
                 setShowModal(false)
                 setLeagueCreated(true)}
