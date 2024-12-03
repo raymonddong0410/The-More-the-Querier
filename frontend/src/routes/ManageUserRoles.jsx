@@ -42,7 +42,7 @@ function ManageUserRoles() {
 
     return (
         <div>
-            <h2>Manage User Roles</h2>
+            <h2 className="text-white">Manage User Roles</h2>
             <table border="1" style={{ width: '100%', textAlign: 'left' }}>
                 <thead>
                     <tr>

@@ -41,7 +41,7 @@ function ManageLeagues() {
 
     return (
         <div>
-            <h2>Manage Leagues</h2>
+            <h2 className="text-white">Manage Leagues</h2>
             <ul>
                 {visibleLeagues.map(league => (
                     <li key={league.leagueID}>

@@ -53,7 +53,7 @@ function LeagueList() {
     };
 
     return (
-        <div>
+        <div className="form-container">
             <h1>Leagues</h1>
             <input 
                 type="text" 
@@ -65,8 +65,8 @@ function LeagueList() {
             <button onClick={() => setShowModal(true)}>Create League</button>
             <ul>
                 {visibleLeagues.map((league) => (
-                    <li key={league.leagueID}>
-                        <Link to={`/league/${league.leagueID}`}>{league.leagueName}</Link>
+                    <li className="text-white" key={league.leagueID}>
+                        <Link className="text-white" to={`/league/${league.leagueID}`}>{league.leagueName}</Link>
                     </li>
                 ))}
             </ul>

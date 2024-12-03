@@ -158,7 +158,7 @@ function HomePage() {
         {/* Matches Table */}
         <div className="bg-white rounded-lg shadow-md">
           <div className="p-4 border-b">
-            <h2 className="text-xl font-semibold">Matches</h2>
+            <h2 className="league-header">Matches</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="table-full-width">
