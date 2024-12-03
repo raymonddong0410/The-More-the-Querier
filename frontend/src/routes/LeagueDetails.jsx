@@ -96,7 +96,7 @@ function LeagueDetails() {
             {teams.length === 0 ? (
                 <p>No teams in this league yet.</p>
             ) : (
-                <table>
+                <table className="table-full-width">
                     <thead>
                         <tr>
                             <th>Team Name</th>

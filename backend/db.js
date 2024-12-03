@@ -138,7 +138,33 @@ async function createTables(pool) {
             FOREIGN KEY (teamID) REFERENCES team(teamID) ON DELETE CASCADE
         )`,
 
-        
+        `
+        CREATE OR REPLACE FUNCTION updateProfileSetting (
+            thisUserID INT,
+            favoriteSport VARCHAR(255),
+            newAbout VARCHAR(255)
+        )
+        RETURNS VARCHAR(255)
+        DETERMINISTIC
+        BEGIN
+            INSERT INTO profileSetting (userID, favoriteSport, aboutMe)
+            VALUES (thisUserID, favoriteSport, newAbout)
+            ON DUPLICATE KEY UPDATE
+                favoriteSport = VALUES(favoriteSport),
+                aboutMe = VALUES(aboutMe);
+
+            RETURN 'ProfileSetting updated successfully!';
+        END;
+        `,
+
+        `
+        CREATE OR REPLACE TRIGGER delete_inactive_teams_before_user_delete
+        BEFORE DELETE ON users
+        FOR EACH ROW
+        BEGIN
+            DELETE FROM team
+            WHERE status = 'I';
+        END;`
         
 
     ];

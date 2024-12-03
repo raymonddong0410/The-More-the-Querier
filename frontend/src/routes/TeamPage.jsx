@@ -5,7 +5,11 @@ import axios from 'axios';
 axios.defaults.baseURL = 'http://localhost:3000/backend';
 
 function TeamPage() {
-    const [teamDetails, setTeamDetails] = useState({});
+    const [teamDetails, setTeamDetails] = useState({
+        username: "inactive",
+        teamName: "inactive",
+        leagueName: "inactive"
+    });
     const [players, setPlayers] = useState([]);
     const { teamID } = useParams();
 
@@ -15,6 +19,7 @@ function TeamPage() {
         const fetchTeamDetails = async () => {
             try {
                 const response = await axios.get(`/teamDetails/${teamID}`);
+                console.log(response)
                 setTeamDetails(response.data.team)
             } catch (err) {
                 console.error("Failed to get team information", err);

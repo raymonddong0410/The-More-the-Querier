@@ -11,7 +11,6 @@ function MatchesPage() {
     const [error, setError] = useState(null);
 
     const { teamID } = useParams();
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchTeamDetails = async () => {
@@ -19,8 +18,8 @@ function MatchesPage() {
                 const response = await axios.get(`/teamDetails/${teamID}`);
                 setTeamDetails(response.data.team);
             } catch (err) {
-                console.error("Failed to get team information", err);
-                setError("Failed to load team details");
+                console.error("Failed to get team matches information", err);
+                setError("Failed to load team matches");
             }
         };
 
@@ -94,9 +93,13 @@ function MatchesPage() {
                         ) : (
                             matches.map((match) => {
                                 const result = determineMatchResult(match);
-                                const opponentName = parseInt(match.team1ID) === parseInt(teamID)
+                                let opponentName = parseInt(match.team1ID) === parseInt(teamID)
                                     ? match.team2Name
                                     : match.team1Name;
+
+                                if (opponentName === null) {
+                                    opponentName = 'Inactive';
+                                }
 
                                 return (
                                     <tr key={match.matchID}>
