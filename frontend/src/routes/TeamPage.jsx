@@ -71,7 +71,7 @@ function TeamPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Team Overview */}
             <div className="bg-white rounded-lg shadow-md p-4">
-                <h2 className="text-xl font-semibold mb-4">Team Overview</h2>
+                <h2 className="text-white">Team Overview</h2>
                 <div className="space-y-2">
                     <p><strong>Total Points:</strong> {teamDetails.totalPoints}</p>
                     <p><strong>Ranking:</strong> {teamDetails.ranking}</p>
@@ -82,7 +82,7 @@ function TeamPage() {
             {/* Players Table */}
             <div className="bg-white rounded-lg shadow-md">
                 <div className="p-4 border-b">
-                    <h2 className="text-xl font-semibold">Team Players</h2>
+                    <h2 className="text-white">Team Players</h2>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full">

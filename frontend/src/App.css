@@ -9,6 +9,11 @@ body {
   background-color: #121212; 
   color: #ffffff; 
 }
+h2 {
+  font-size: 2rem;
+  margin: 1em 0;
+  color: #000000;
+}
 
 
 
@@ -41,6 +46,30 @@ body {
   }
 }
 
+.league-header {
+  font-size: 2rem;
+  margin: 1em 0;
+  color: #ffffff;
+
+}
+h1 {
+  font-size: 3rem;
+  margin: 1em 0;
+  color: #ffffff;
+}
+.text-white{
+  color: #ffffff;
+  
+}
+p{
+  font-size: 1.5rem;
+  margin: 1em 0;
+  color: #ffffff;
+
+}
+label {
+  color: #ffffff;
+}
 .welcome {
   font-size: 4rem;
   margin: 1em 0;
@@ -145,11 +174,6 @@ button {
   transition: background-color 0.2s ease;
 }
 
-h2 {
-  font-size: 2rem;
-  margin: 1em 0;
-  color: #000000;
-}
 
 label {
   display: block;

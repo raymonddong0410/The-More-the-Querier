@@ -83,14 +83,14 @@ const ProfileSettings = () => {
             <h1>Profile Settings</h1>
 
             <div className="current-settings">
-                <h2>Current Settings</h2>
+                <h2 className="league-header">Current Settings</h2>
                 <p><strong>Favorite Sport:</strong> {profileSettings.favoriteSport || 'Not set'}</p>
                 <p><strong>About Me:</strong> {profileSettings.aboutMe || 'Not set'}</p>
             </div>
             
             <form onSubmit={handleSave}>
                 <div className="form-group">
-                    <label htmlFor="favoriteSport">Favorite Sport</label>
+                    <label className="text-white" htmlFor="favoriteSport">Favorite Sport</label>
                     <input
                         type="text"
                         id="favoriteSport"
@@ -102,7 +102,7 @@ const ProfileSettings = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="aboutMe">About Me</label>
+                    <label  className="text-white"  htmlFor="aboutMe">About Me</label>
                     <textarea
                         id="aboutMe"
                         name="aboutMe"
@@ -119,7 +119,7 @@ const ProfileSettings = () => {
             </form>
 
             <div className="account-deletion-section">
-                <h2>Account Deletion</h2>
+                <h2 className="text-white">Account Deletion</h2>
                 <button 
                     onClick={() => setDeleteModalOpen(true)} 
                     className="delete-account-button"

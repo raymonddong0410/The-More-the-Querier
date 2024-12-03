@@ -92,7 +92,7 @@ function LeagueDetails() {
             <p>Max Teams: {league.maxTeams}</p>
             <p>Draft Date: {league.draftDate ? new Date(league.draftDate).toLocaleDateString() : 'TBD'}</p>
 
-            <h2>Teams in this League</h2>
+            <h2 className="text-white">Teams in this League</h2>
             {teams.length === 0 ? (
                 <p>No teams in this league yet.</p>
             ) : (
@@ -137,7 +137,7 @@ function LeagueDetails() {
                 />
             )}
 
-            <h2>Drafts for this League</h2>
+            <h2  className="text-white">Drafts for this League</h2>
             {drafts.length === 0 ? (
                 <p>No drafts created yet.</p>
             ) : (

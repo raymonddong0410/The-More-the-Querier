@@ -31,11 +31,11 @@ function TeamsList() {
 
     return (
         <div>
-            <h1>Your Teams</h1>
+            <h1 >Your Teams</h1>
             <ul>
                 {teams.map((team) => (
                     <li key={team.teamID}>
-                        <h2>{team.teamName}</h2>
+                        <h2 className="text-white">{team.teamName}</h2>
                         <p>League: {team.leagueName}</p>
                         <p>Total Points: {team.totalPoints}</p>
                         <p>Ranking: {team.ranking}</p>
