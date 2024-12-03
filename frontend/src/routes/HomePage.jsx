@@ -60,11 +60,6 @@ function HomePage() {
               console.error("Failed to get Profile Settings", err);
           }
       };
-
-        
-
-        
-
         fetchUserData();
         fetchMyLeagues();
         fetchMatches()
