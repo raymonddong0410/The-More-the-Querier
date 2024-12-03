@@ -126,7 +126,6 @@ function HomePage() {
                <th className="table-header-cell" onClick={() => handleSort('leagueName')} style={{ cursor: 'pointer' }}>
                 League Name {sortLeagues.key === 'leagueName' ? (sortLeagues.direction === 'asc' ? '↑' : '↓') : ''}
               </th>
-              <th className="table-header-cell">League Name</th>
               <th className="table-header-cell">Type</th>
               <th className="table-header-cell">Max Teams</th>
               <th className="table-header-cell">Draft Date</th>

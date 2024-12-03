@@ -84,7 +84,7 @@ function AuthRoutes({ onLogin, loggedIn }) {
                 </form>
             ) : (
                 <form onSubmit={handleLogin}>
-                    <h2>Login</h2>
+                    <h2>Welcome to The More the Querier Fantasy Sports!</h2>
                     <input
                         type="text"
                         placeholder="Username"
