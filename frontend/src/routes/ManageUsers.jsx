@@ -39,7 +39,7 @@ function ManageUsers() {
 
     return (
         <div>
-            <h2>Manage Users</h2>
+            <h2 className="text-white">Manage Users</h2>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
             <div style={{ flex: 1 }}>
                 <h3>Unbanned Users</h3>

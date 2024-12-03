@@ -52,7 +52,7 @@ function AuthRoutes({ onLogin, loggedIn }) {
         <div className="AuthRoutes">
             {showRegister ? (
                 <form onSubmit={handleRegister}>
-                    <h2>Register</h2>
+                    <h2 className="text-white">Register</h2>
                     <input
                         type="text"
                         placeholder="Username"
