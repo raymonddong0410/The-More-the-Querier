@@ -7,7 +7,6 @@ module.exports = (pool) => {
     router.delete('/', verifyToken, (req, res) => {
         const userID = req.user.userID;
 
-        // Start a transaction to ensure data integrity
         pool.getConnection((err, connection) => {
             if (err) {
                 console.error('Database connection error:', err);
@@ -21,56 +20,84 @@ module.exports = (pool) => {
                 }
 
                 const deletionQueries = [
-
-                    // Update matches to set team1ID and team2ID to NULL for teams in leagues owned by user
-                    // Update matches to set team1ID and team2ID to NULL for teams in leagues owned by user
+                    // Nullify team references in matches (team1ID, team2ID, and winner)
                     `UPDATE matches 
                     SET team1ID = NULL 
                     WHERE team1ID IN (
                         SELECT teamID 
                         FROM team 
-                        WHERE owner = ?
+                        WHERE leagueID IN (
+                            SELECT leagueID 
+                            FROM league 
+                            WHERE commissioner = ?
+                        )
                     )`,
-                    
                     `UPDATE matches 
                     SET team2ID = NULL 
                     WHERE team2ID IN (
                         SELECT teamID 
                         FROM team 
-                        WHERE owner = ?
-                    );`,
+                        WHERE leagueID IN (
+                            SELECT leagueID 
+                            FROM league 
+                            WHERE commissioner = ?
+                        )
+                    )`,
+                    `UPDATE matches 
+                    SET winner = NULL 
+                    WHERE winner IN (
+                        SELECT teamID 
+                        FROM team 
+                        WHERE leagueID IN (
+                            SELECT leagueID 
+                            FROM league 
+                            WHERE commissioner = ?
+                        )
+                    )`,
 
-                    // Delete playerTeam entries for all teams in leagues owned by user
-                    'DELETE FROM playerTeam WHERE teamID IN (SELECT teamID FROM team WHERE leagueID IN (SELECT leagueID FROM league WHERE commissioner = ?))',
+                    // Delete draftedPlayers entries
+                    `DELETE FROM draftedPlayers 
+                    WHERE draftID IN (
+                        SELECT draftID 
+                        FROM draft 
+                        WHERE leagueID IN (
+                            SELECT leagueID 
+                            FROM league 
+                            WHERE commissioner = ?
+                        )
+                    )`,
 
-                    // Delete draftedPlayer entries for all drafts in leagues owned by user
-                    'DELETE FROM draftedPlayers WHERE draftID IN (SELECT draftID FROM draft WHERE leagueID IN (SELECT leagueID FROM league WHERE commissioner = ?))',
-                    
-                    // Delete draft entries in leagues owned by user
-                    'DELETE FROM draft WHERE leagueID IN (SELECT leagueID FROM league WHERE commissioner = ?)',
-                    
-                    // Delete teams in leagues owned by the user
-                    'DELETE FROM team WHERE leagueID IN (SELECT leagueID FROM league WHERE commissioner = ?)',
-                    
-                    // Delete leagues owned by the user
-                    'DELETE FROM league WHERE commissioner = ?',
-                    
-                    // Remove user from teams as owner
-                    `UPDATE team SET status = 'I' WHERE owner = ?`,
-                    
+                    // Delete drafts
+                    `DELETE FROM draft 
+                    WHERE leagueID IN (
+                        SELECT leagueID 
+                        FROM league 
+                        WHERE commissioner = ?
+                    )`,
+
+                    // Delete teams
+                    `DELETE FROM team 
+                    WHERE leagueID IN (
+                        SELECT leagueID 
+                        FROM league 
+                        WHERE commissioner = ?
+                    )`,
+
+                    // Delete leagues
+                    `DELETE FROM league 
+                    WHERE commissioner = ?`,
+
                     // Delete profile settings
-                    'DELETE FROM profileSetting WHERE userID = ?',
-                    
-                    // Delete user record
-                    'DELETE FROM users WHERE userID = ?'
+                    `DELETE FROM profileSetting 
+                    WHERE userID = ?`,
+
+                    // Delete user account
+                    `DELETE FROM users 
+                    WHERE userID = ?`
                 ];
 
-                const executeQuery = (query) => {
+                const executeQuery = (query, params) => {
                     return new Promise((resolve, reject) => {
-                        const params = query.includes('DELETE FROM matches') 
-                            ? [userID, userID]  // Two parameters for the matches deletion query
-                            : [userID];          // Single parameter for other queries
-                
                         connection.query(query, params, (err) => {
                             if (err) reject(err);
                             else resolve();
@@ -78,17 +105,16 @@ module.exports = (pool) => {
                     });
                 };
 
-                // execute queries on all parts
-                Promise.all(deletionQueries.map(executeQuery))
+                Promise.all(deletionQueries.map(query => executeQuery(query, [userID])))
                     .then(() => {
                         connection.commit((err) => {
                             connection.release();
-                            
+
                             if (err) {
                                 return res.status(500).json({ error: 'Transaction commit failed' });
                             }
 
-                             // Clear authentication cookies so user can go back to onboard page
+                            // Clear authentication cookies
                             res.clearCookie('authToken', {
                                 httpOnly: true,
                                 secure: process.env.NODE_ENV === 'production',
@@ -99,12 +125,11 @@ module.exports = (pool) => {
                                 secure: process.env.NODE_ENV === 'production',
                                 sameSite: 'Strict'
                             });
-                            
+
                             res.status(200).json({ message: 'Account deleted successfully' });
                         });
                     })
                     .catch((error) => {
-                        // Rollback the transaction if any query fails
                         connection.rollback(() => {
                             connection.release();
                             console.error('Account deletion error:', error);
