@@ -6,12 +6,13 @@
 }
 
 body {
-  background-color: #121212; 
-  color: #ffffff; 
+  background-color: #88a89e;
 }
-
-
-
+h2 {
+  font-size: 2rem;
+  margin: 1em 0;
+  color: #000000;
+}
 
 .logo {
   height: 6em;
@@ -24,6 +25,41 @@ body {
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+input {
+  padding: 0.5em;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  border: 1px solid #000000;
+  margin: 1em 0;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #444557;
+  color: #8f8989;
+  border: none;
+  padding: 0.5em;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 1em;
+  box-sizing: border-box;
 }
 
 @keyframes logo-spin {
@@ -41,6 +77,27 @@ body {
   }
 }
 
+.league-header {
+  font-size: 2rem;
+  margin: 1em 0;
+  color: #ffffff;
+}
+h1 {
+  font-size: 3rem;
+  margin: 1em 0;
+  color: #ffffff;
+}
+.text-white {
+  color: #ffffff;
+}
+p {
+  font-size: 1.5rem;
+  margin: 1em 0;
+  color: #ffffff;
+}
+label {
+  color: #ffffff;
+}
 .welcome {
   font-size: 4rem;
   margin: 1em 0;
@@ -60,17 +117,16 @@ body {
   border-collapse: collapse;
 }
 
-
 .table-header-row {
-  background-color: #ffff; 
+  background-color: #ffff;
   text-align: left;
 }
 
 .table-header-cell {
-  padding: 1rem; 
+  padding: 1rem;
   font-weight: bold;
-  color: #545454; 
-  border-bottom: 2px solid #e5e7eb; 
+  color: #545454;
+  border-bottom: 2px solid #e5e7eb;
 }
 
 /* Body row styling */
@@ -80,29 +136,32 @@ body {
 }
 
 .table-body-row:hover {
-  background-color: #365d81; 
+  background-color: #365d81;
 }
 
+li {
+  color: #000000;
+}
 
 .table-body-cell {
   padding: 1rem;
-  color: #4b5563; 
+  color: #4b5563;
 }
 
-.table-body-cell-value{
+.table-body-cell-value {
   padding: 1rem;
-  color: #e9f0ff; 
+  color: #e9f0ff;
 }
 
 .profile-settings-box {
-  border: 2px solid #ddd; 
+  border: 2px solid #ddd;
   padding: 5px;
-  border-radius: 10px; 
+  border-radius: 10px;
   margin: 20px 0;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  background-color: transparent; 
+  background-color: transparent;
   text-align: left;
   padding-left: 20px;
 }
@@ -123,13 +182,18 @@ body {
 }
 
 .profile-settings-box .profile-content {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   color: #ffff;
 }
 
 .aboutMe {
   margin: 1em 0;
   font-style: italic;
-  padding-right: .5em;
-  
+  padding-right: 0.5em;
+}
+
+label {
+  display: block;
+  margin: 1em 0;
+  color: #000000;
 }

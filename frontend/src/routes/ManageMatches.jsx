@@ -79,7 +79,7 @@ function ManageMatches() {
         <h1>Manage Matches</h1>
         
         {/* Teams Table */}
-        <h2>Teams</h2>
+        <h2 className="text-white">Teams</h2>
         <table border="1" style={{ width: '100%', textAlign: 'left' }}>
             <thead>
                 <tr>
@@ -100,7 +100,7 @@ function ManageMatches() {
         </table>
 
          {/* Matches Table */}
-         <h2>Matches</h2>
+         <h2 className="text-white">Matches</h2>
             <table border="1" style={{ width: '100%', textAlign: 'left' }}>
                 <thead>
                     <tr>
@@ -127,9 +127,9 @@ function ManageMatches() {
             </table>
 
        {/* Match Creation Form */}
-       <h2>Create Match</h2>
+       <h2 className="text-white">Create Match</h2>
             <form onSubmit={handleCreateMatch}>
-                <label>
+                <label className="text-white">
                     Team 1:
                     <select
                         name="team1ID"
@@ -147,7 +147,7 @@ function ManageMatches() {
                     </select>
                 </label>
                 <br />
-                <label>
+                <label className="text-white" >
                     Team 2:
                     <select
                         name="team2ID"
@@ -165,7 +165,7 @@ function ManageMatches() {
                     </select>
                 </label>
                 <br />
-                <label>
+                <label className="text-white">
                     Match Date:
                     <input
                         type="date"
@@ -176,7 +176,7 @@ function ManageMatches() {
                     />
                 </label>
                 <br />
-                <label>
+                <label className="text-white">
                     Final Score:
                     <input
                         type="text"
@@ -186,7 +186,7 @@ function ManageMatches() {
                     />
                 </label>
                 <br />
-                <label>
+                <label className="text-white">
                     Winner:
                     <input
                         type="text"
