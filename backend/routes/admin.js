@@ -112,5 +112,47 @@ module.exports = (pool) => {
         }
     });
 
+    // Get all teams
+    router.get('/teams', checkAdmin, async (req, res) => {
+        try {
+            const [teams] = await pool.promise().query('SELECT * FROM team');
+            res.status(200).json(teams);
+        } catch (err) {
+            console.error('Error fetching teams:', err);
+            res.status(500).json({ error: 'Failed to fetch teams' });
+        }
+    })
+
+    //Get all matches
+    router.get('/matches', checkAdmin, async (req, res) => {
+        try {
+            const [matches] = await pool.promise().query('SELECT * FROM matches');
+            res.status(200).json(matches);
+        } catch (err) {
+            console.error('Error fetching matches:', err);
+            res.status(500).json({ error: 'Failed to fetch matches' });
+        }
+    });
+
+    // Create a new match
+    router.post('/createMatch', checkAdmin, async (req, res) => {
+        const { team1ID, team2ID, matchDate, finalScore, winner } = req.body;
+        
+        try {
+            const [result] = await pool.promise().query(
+                'INSERT INTO matches (team1ID, team2ID, matchDate, finalScore, winner) VALUES (?, ?, ?, ?, ?)', 
+                [team1ID, team2ID, matchDate, finalScore, winner]
+            );
+            
+            res.status(201).json({ 
+                message: 'Match created successfully', 
+                matchID: result.insertId 
+            });
+        } catch (err) {
+            console.error('Error creating match:', err);
+            res.status(500).json({ error: 'Failed to create match' });
+        }
+    });
+
     return router;
 };
