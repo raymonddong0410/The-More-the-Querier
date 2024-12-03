@@ -103,6 +103,7 @@ function AdminPlayerManagement() {
                     <option value="Football">Football</option>
                     <option value="Basketball">Basketball</option>
                     <option value="Baseball">Baseball</option>
+                    <option value="Hockey">Hockey</option>
                 </select>
                 <input
                     type="text"
