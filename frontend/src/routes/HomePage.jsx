@@ -6,8 +6,8 @@ import {Link} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 
-// axios.defaults.baseURL = 'https://themorethequerier.online/backend';
-axios.defaults.baseURL = 'http://localhost:3000/backend';
+axios.defaults.baseURL = 'https://themorethequerier.online/backend';
+// axios.defaults.baseURL = 'http://localhost:3000/backend';
 
 function HomePage() {
     const [username, setUsername] = useState('');
