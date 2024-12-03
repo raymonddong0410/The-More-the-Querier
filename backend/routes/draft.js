@@ -65,7 +65,7 @@ module.exports = (pool) => {
                     d.playerID AS drafted 
                 FROM player p 
                 LEFT JOIN draftedPlayers d ON p.playerID = d.playerID AND d.draftID = ?
-                WHERE p.sport = ? AND p.availabilityStatus = "A"`,
+                WHERE p.sport = ? AND p.availabilityStatus = "1"`,
                 [draftID, draft[0].sport]
             );
 
