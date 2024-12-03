@@ -39,21 +39,3 @@ export async function logout() {
     }
     window.location.href = '/';
 }
-
-// // Axios interceptor for automatic token refresh
-// axios.interceptors.response.use(
-//     (response) => response, // Pass through successful responses
-//     async (error) => {
-//         if (error.response?.status === 401 && !error.config.__isRetry) {
-//             error.config.__isRetry = true; // Prevent infinite loops
-//             try {
-//                 await axios.post('/refresh'); // Refresh token
-//                 return axios(error.config); // Retry the original request
-//             } catch (refreshError) {
-//                 console.error('Token refresh failed:', refreshError);
-//                 logout(); // Force logout on failure
-//             }
-//         }
-//         return Promise.reject(error);
-//     }
-// );
