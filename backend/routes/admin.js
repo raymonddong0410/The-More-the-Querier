@@ -44,17 +44,49 @@ module.exports = (pool) => {
         const { leagueID } = req.params;
     
         try {
+            // Delete dependent records in the playerStatistic table
+            await pool.promise().query(
+                `DELETE FROM playerStatistic WHERE matchID IN 
+                 (SELECT matchID FROM matches WHERE team1ID IN 
+                  (SELECT teamID FROM team WHERE leagueID = ?) 
+                  OR team2ID IN 
+                  (SELECT teamID FROM team WHERE leagueID = ?))`, 
+                [leagueID, leagueID]
+            );
+    
+            // Delete dependent records in the matches table
+            await pool.promise().query(
+                `DELETE FROM matches WHERE team1ID IN 
+                 (SELECT teamID FROM team WHERE leagueID = ?) 
+                 OR team2ID IN 
+                 (SELECT teamID FROM team WHERE leagueID = ?)`, 
+                [leagueID, leagueID]
+            );
+    
             // Delete dependent records in the draftedPlayers table
-            await pool.promise().query('DELETE FROM draftedPlayers WHERE teamID IN (SELECT teamID FROM team WHERE leagueID = ?)', [leagueID]);
+            await pool.promise().query(
+                `DELETE FROM draftedPlayers WHERE teamID IN 
+                 (SELECT teamID FROM team WHERE leagueID = ?)`, 
+                [leagueID]
+            );
     
             // Delete dependent records in the team table
-            await pool.promise().query('DELETE FROM team WHERE leagueID = ?', [leagueID]);
+            await pool.promise().query(
+                `DELETE FROM team WHERE leagueID = ?`, 
+                [leagueID]
+            );
     
             // Delete dependent records in the draft table
-            await pool.promise().query('DELETE FROM draft WHERE leagueID = ?', [leagueID]);
+            await pool.promise().query(
+                `DELETE FROM draft WHERE leagueID = ?`, 
+                [leagueID]
+            );
     
-            // Delete the league itself
-            await pool.promise().query('DELETE FROM league WHERE leagueID = ?', [leagueID]);
+            // Finally, delete the league itself
+            await pool.promise().query(
+                `DELETE FROM league WHERE leagueID = ?`, 
+                [leagueID]
+            );
     
             res.status(200).json({ message: 'League deleted successfully' });
         } catch (err) {
