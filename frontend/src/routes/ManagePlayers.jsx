@@ -134,8 +134,8 @@ function AdminPlayerManagement() {
                     required
                 >
                     <option value="">Select Availability</option>
-                    <option value="A">Available</option>
-                    <option value="I">Injured</option>
+                    <option value="1">Available</option>
+                    <option value="0">Injured</option>
                 </select>
                 
                 <button type="submit">
