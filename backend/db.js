@@ -134,10 +134,19 @@ async function createTables(pool) {
             ON DUPLICATE KEY UPDATE
                 favoriteSport = VALUES(favoriteSport),
                 aboutMe = VALUES(aboutMe);
-        
+
             RETURN 'ProfileSetting updated successfully!';
         END;
+        `,
+
         `
+        CREATE OR REPLACE TRIGGER delete_inactive_teams_before_user_delete
+        BEFORE DELETE ON users
+        FOR EACH ROW
+        BEGIN
+            DELETE FROM team
+            WHERE status = 'I';
+        END;`
     ];
 
     for (const query of queries) {

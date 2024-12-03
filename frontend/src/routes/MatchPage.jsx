@@ -11,7 +11,6 @@ function MatchesPage() {
     const [error, setError] = useState(null);
 
     const { teamID } = useParams();
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchTeamDetails = async () => {
@@ -94,9 +93,13 @@ function MatchesPage() {
                         ) : (
                             matches.map((match) => {
                                 const result = determineMatchResult(match);
-                                const opponentName = parseInt(match.team1ID) === parseInt(teamID)
+                                let opponentName = parseInt(match.team1ID) === parseInt(teamID)
                                     ? match.team2Name
                                     : match.team1Name;
+
+                                if (opponentName === null) {
+                                    opponentName = 'Inactive';
+                                }
 
                                 return (
                                     <tr key={match.matchID}>
