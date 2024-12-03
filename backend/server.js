@@ -7,6 +7,7 @@ const { pool, initializeDatabase } = require('./db');
 const app = express();
 const port = process.env.PORT || 3000;
 const verifyToken = require('./middleware/verifyToken');
+const { resumeDrafts } = require('./utils/draftTimer');
 
 // Middleware
 app.use(cookieParser());
@@ -22,7 +23,9 @@ app.use(express.json());
 
 // Initialize the database and start the server
 initializeDatabase(pool)
-    .then(() => {
+    .then(async () => {
+        await resumeDrafts(pool); // Resume timers
+        console.log('Active drafts resumed.');
         // Prefix all routes with /backend
         app.use('/backend/register', require('./routes/register')(pool));
         app.use('/backend/login', require('./routes/login')(pool));
@@ -46,6 +49,9 @@ initializeDatabase(pool)
         app.use('/backend/player', require('./routes/getPlayerDetails')(pool));
 
         app.use('/backend/admin', verifyToken, require('./routes/admin')(pool));
+        app.use('/backend/draft', require('./routes/draft')(pool));
+
+        app.use('/backend/userTeams', require('./routes/getUserTeams')(pool));
 
 
         // Start the server

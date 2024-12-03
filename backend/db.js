@@ -43,19 +43,35 @@ async function createTables(pool) {
             draftDate DATE,
             FOREIGN KEY (commissioner) REFERENCES users(userID)
         )`,
-
+        
+        // Draft Table
+        `CREATE TABLE IF NOT EXISTS draft (
+            draftID INT AUTO_INCREMENT PRIMARY KEY,
+            leagueID INT NOT NULL, 
+            draftDate DATE NOT NULL,
+            draftOrder CHAR(1) NOT NULL, -- 'S' for Snake, 'R' for Round Robin
+            draftStatus CHAR(1) NOT NULL, -- 'P' for Pending, 'I' for In Progress, 'C' for Completed
+            sport VARCHAR(20) NOT NULL,
+            lastPickTime DATETIME DEFAULT NULL, -- Timestamp for the last pick
+            rounds INT DEFAULT 1, -- Total number of rounds (optional)
+            picksMade INT DEFAULT 0, -- Tracks the number of picks made so far
+            FOREIGN KEY (leagueID) REFERENCES league(leagueID)
+        )`,
+        
         // Team Table
         `CREATE TABLE IF NOT EXISTS team (
             teamID INT AUTO_INCREMENT PRIMARY KEY, 
             teamName VARCHAR(25) NOT NULL,
             leagueID INT, 
+            draftID INT, -- NEW COLUMN
             owner INT,
             totalPoints INT,
             ranking INT,
             status CHAR(1),
             FOREIGN KEY (leagueID) REFERENCES league(leagueID),
+            FOREIGN KEY (draftID) REFERENCES draft(draftID), -- OPTIONAL
             FOREIGN KEY (owner) REFERENCES users(userID)
-        )`,
+        );`,
 
         // Player Table
         `CREATE TABLE IF NOT EXISTS player (
@@ -92,33 +108,39 @@ async function createTables(pool) {
             FOREIGN KEY (playerID) REFERENCES player(playerID)
         )`,
 
-        // Draft Table
-        `CREATE TABLE IF NOT EXISTS draft (
-            draftID INT AUTO_INCREMENT PRIMARY KEY,
-            leagueID INT NOT NULL, 
-            draftDate DATE NOT NULL,
-            draftOrder CHAR(1) NOT NULL,
-            draftStatus CHAR(1) NOT NULL,
-            FOREIGN KEY (leagueID) REFERENCES league(leagueID)
-        )`,
-
         // Drafted Players Table
         `CREATE TABLE IF NOT EXISTS draftedPlayers (
             draftID INT NOT NULL, 
             playerID INT NOT NULL, 
+            teamID INT NOT NULL, -- Add teamID
             PRIMARY KEY (draftID, playerID),
             FOREIGN KEY (draftID) REFERENCES draft(draftID),
-            FOREIGN KEY (playerID) REFERENCES player(playerID)
-        )`,
-
-        // Player Team Table
-        `CREATE TABLE IF NOT EXISTS playerTeam (
-            playerID INT NOT NULL, 
-            teamID INT NOT NULL, 
-            PRIMARY KEY (playerID, teamID),
             FOREIGN KEY (playerID) REFERENCES player(playerID),
             FOREIGN KEY (teamID) REFERENCES team(teamID)
-        )`
+        );`,
+        
+
+        `CREATE TABLE IF NOT EXISTS draftTeams (
+            draftID INT NOT NULL,
+            teamID INT NOT NULL,
+            PRIMARY KEY (draftID, teamID),
+            FOREIGN KEY (draftID) REFERENCES draft(draftID) ON DELETE CASCADE,
+            FOREIGN KEY (teamID) REFERENCES team(teamID) ON DELETE CASCADE
+        );`,
+
+        // Draft Order Table
+        `CREATE TABLE IF NOT EXISTS draftOrder (
+            draftID INT NOT NULL,
+            teamID INT NOT NULL,
+            pickOrder INT NOT NULL,
+            PRIMARY KEY (draftID, teamID),
+            FOREIGN KEY (draftID) REFERENCES draft(draftID) ON DELETE CASCADE,
+            FOREIGN KEY (teamID) REFERENCES team(teamID) ON DELETE CASCADE
+        )`,
+
+        
+        
+
     ];
 
     for (const query of queries) {

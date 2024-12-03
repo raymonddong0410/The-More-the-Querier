@@ -15,7 +15,7 @@ module.exports = (pool) => {
                 p.realLifeTeam, 
                 p.fantasyPoints
             FROM player p
-            JOIN playerTeam pt ON p.playerID = pt.playerID
+            JOIN draftedPlayers pt ON p.playerID = pt.playerID
             WHERE pt.teamID = ?`;
 
         pool.query(query, [teamID], (err, results) => {

@@ -12,7 +12,12 @@ import LeagueList from './routes/LeagueList';
 import LeagueDetails from './routes/LeagueDetails';
 import ProfileSettings from './routes/ProfileSettings';
 import MatchPage from './routes/MatchPage';
+import DraftList from './routes/DraftList';
+import DraftDetails from './routes/DraftDetails';
+import TeamsList from './routes/TeamsList';
 import './App.css';
+
+
 function App() {
     const [authState, setAuthState] = useState({
         loggedIn: false,
@@ -113,6 +118,33 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+
+<Route
+        path="/draft"
+        element={
+            <ProtectedRoute loggedIn={authState.loggedIn}>
+                <DraftList />
+            </ProtectedRoute>
+        }
+    />
+    <Route
+        path="/draft/:draftID"
+        element={
+            <ProtectedRoute loggedIn={authState.loggedIn}>
+                <DraftDetails />
+            </ProtectedRoute>
+        }
+    />
+
+<Route
+    path="/teams"
+    element={
+        <ProtectedRoute loggedIn={authState.loggedIn}>
+            <TeamsList />
+        </ProtectedRoute>
+    }
+/>
+
                 
                 <Route
                     path="/profileSettings"

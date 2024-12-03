@@ -32,8 +32,8 @@ module.exports = (pool) => {
         const { leagueID } = req.params;
     
         try {
-            // Delete dependent records in the playerTeam table
-            await pool.promise().query('DELETE FROM playerTeam WHERE teamID IN (SELECT teamID FROM team WHERE leagueID = ?)', [leagueID]);
+            // Delete dependent records in the draftedPlayers table
+            await pool.promise().query('DELETE FROM draftedPlayers WHERE teamID IN (SELECT teamID FROM team WHERE leagueID = ?)', [leagueID]);
     
             // Delete dependent records in the team table
             await pool.promise().query('DELETE FROM team WHERE leagueID = ?', [leagueID]);
