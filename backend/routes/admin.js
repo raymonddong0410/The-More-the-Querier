@@ -62,7 +62,55 @@ module.exports = (pool) => {
             res.status(500).json({ error: 'Failed to delete league' });
         }
     });
-    
+
+    // Fetch all players
+    router.get('/players', checkAdmin, async (req, res) => {
+        try {
+            const [players] = await pool.promise().query('SELECT * FROM player');
+            res.status(200).json(players);
+        } catch (err) {
+            console.error('Error fetching players:', err);
+            res.status(500).json({ error: 'Failed to fetch players' });
+        }
+    });
+
+    // Create a new player
+    router.post('/createPlayer', checkAdmin, async (req, res) => {
+        const { fullname, sport, position, realLifeTeam, fantasyPoints, availabilityStatus } = req.body;
+        
+        try {
+            const [result] = await pool.promise().query(
+                'INSERT INTO player (fullname, sport, position, realLifeTeam, fantasyPoints, availabilityStatus) VALUES (?, ?, ?, ?, ?, ?)', 
+                [fullname, sport, position, realLifeTeam, fantasyPoints, availabilityStatus]
+            );
+            
+            res.status(201).json({ 
+                message: 'Player created successfully', 
+                playerID: result.insertId 
+            });
+        } catch (err) {
+            console.error('Error creating player:', err);
+            res.status(500).json({ error: 'Failed to create player' });
+        }
+    });
+
+    // Update an existing player
+    router.put('/updatePlayer/:playerID', checkAdmin, async (req, res) => {
+        const { playerID } = req.params;
+        const { fullname, sport, position, realLifeTeam, fantasyPoints, availabilityStatus } = req.body;
+        
+        try {
+            await pool.promise().query(
+                'UPDATE player SET fullname = ?, sport = ?, position = ?, realLifeTeam = ?, fantasyPoints = ?, availabilityStatus = ? WHERE playerID = ?', 
+                [fullname, sport, position, realLifeTeam, fantasyPoints, availabilityStatus, playerID]
+            );
+            
+            res.status(200).json({ message: 'Player updated successfully' });
+        } catch (err) {
+            console.error('Error updating player:', err);
+            res.status(500).json({ error: 'Failed to update player' });
+        }
+    });
 
     return router;
 };
