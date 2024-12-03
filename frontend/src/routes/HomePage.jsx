@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-
 // axios.defaults.baseURL = 'https://themorethequerier.online/backend';
 axios.defaults.baseURL = 'http://localhost:3000/backend';
 
@@ -17,6 +16,10 @@ function HomePage() {
     const [profileSettings, setProfileSettings] = useState({
       favoriteSport: '',
       aboutMe: ''
+    });
+    const [sortConfig, setSortConfig] = useState({
+      column: 'leagueName',
+      order: 'ASC'
     });
 
     useEffect(() => {
@@ -31,8 +34,13 @@ function HomePage() {
 
         const fetchMyLeagues = async() => {
             try {
-                const response = await axios.get('/userLeagues');
-                if (response.data.length !== 0) {
+                const response = await axios.get('/sortUserLeague', {
+                    params: {
+                        sortBy: sortConfig.column,
+                        sortOrder: sortConfig.order
+                    }
+                });
+                if (response.data.user.length !== 0) {
                     setMyLeagues(response.data.user);
                 }
             } catch (err) {
@@ -60,15 +68,11 @@ function HomePage() {
           }
       };
 
-        
-
-        
-
         fetchUserData();
         fetchMyLeagues();
-        fetchMatches()
+        fetchMatches();
         fetchProfileSettings();
-    }, []);
+    }, [sortConfig]);
 
     const handleRowClick = (leagueID) => {
       navigate(`/league/${leagueID}`);
@@ -76,6 +80,14 @@ function HomePage() {
 
     const handleMatchClick = (teamID) => {
       navigate(`/team/${teamID}/matches`);
+    };
+
+    const handleSort = (column) => {
+        // Toggle sort order if same column, otherwise default to ASC
+        setSortConfig(prevConfig => ({
+            column,
+            order: prevConfig.column === column && prevConfig.order === 'ASC' ? 'DESC' : 'ASC'
+        }));
     };
 
     return(
@@ -90,12 +102,8 @@ function HomePage() {
                 <div className="profile-content">
                     <p><strong className="aboutMe">About Me:</strong> {profileSettings.aboutMe || 'Not set'}</p>
                     <p><strong className="aboutMe">Favorite Sport:</strong> {profileSettings.favoriteSport || 'Not set'}</p>
-                   
                 </div>
       </div>
-
-
-      
 
       <div >
         {/* Leagues Table */}
@@ -107,10 +115,38 @@ function HomePage() {
           <table className="table-full-width">
           <thead>
             <tr className="table-header-row">
-              <th className="table-header-cell">League Name</th>
-              <th className="table-header-cell">Type</th>
-              <th className="table-header-cell">Max Teams</th>
-              <th className="table-header-cell">Draft Date</th>
+              <th 
+                className="table-header-cell cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSort('leagueName')}
+              >
+                League Name 
+                {sortConfig.column === 'leagueName' && 
+                  (sortConfig.order === 'ASC' ? ' ▲' : ' ▼')}
+              </th>
+              <th 
+                className="table-header-cell cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSort('leagueType')}
+              >
+                Type
+                {sortConfig.column === 'leagueType' && 
+                  (sortConfig.order === 'ASC' ? ' ▲' : ' ▼')}
+              </th>
+              <th 
+                className="table-header-cell cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSort('maxTeams')}
+              >
+                Max Teams
+                {sortConfig.column === 'maxTeams' && 
+                  (sortConfig.order === 'ASC' ? ' ▲' : ' ▼')}
+              </th>
+              <th 
+                className="table-header-cell cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSort('draftDate')}
+              >
+                Draft Date
+                {sortConfig.column === 'draftDate' && 
+                  (sortConfig.order === 'ASC' ? ' ▲' : ' ▼')}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -126,9 +162,7 @@ function HomePage() {
                     {league.maxTeams}
                 </td>
                 <td className="table-body-cell-value">
-                
                     {league.draftDate ? new Date(league.draftDate).toLocaleDateString() : 'TBD'}
-                
                 </td>
               </tr>
             ))}

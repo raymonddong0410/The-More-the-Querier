@@ -118,7 +118,59 @@ async function createTables(pool) {
             PRIMARY KEY (playerID, teamID),
             FOREIGN KEY (playerID) REFERENCES player(playerID),
             FOREIGN KEY (teamID) REFERENCES team(teamID)
-        )`
+        )`,
+        `
+        CREATE OR REPLACE PROCEDURE SortUserLeagues(
+            IN p_userID INT, 
+            IN p_sortBy VARCHAR(20), 
+            IN p_sortOrder VARCHAR(4)
+        )
+        BEGIN
+            CASE p_sortBy 
+                WHEN 'leagueName' THEN
+                    SELECT l.*, t.teamID, t.teamName, t.totalPoints, t.ranking
+                    FROM league l
+                    LEFT JOIN team t ON l.leagueID = t.leagueID
+                    WHERE l.commissioner = p_userID OR t.owner = p_userID
+                    ORDER BY 
+                        CASE WHEN p_sortOrder = 'ASC' THEN l.leagueName END ASC,
+                        CASE WHEN p_sortOrder = 'DESC' THEN l.leagueName END DESC;
+                
+                WHEN 'leagueType' THEN
+                    SELECT l.*, t.teamID, t.teamName, t.totalPoints, t.ranking
+                    FROM league l
+                    LEFT JOIN team t ON l.leagueID = t.leagueID
+                    WHERE l.commissioner = p_userID OR t.owner = p_userID
+                    ORDER BY 
+                        CASE WHEN p_sortOrder = 'ASC' THEN l.leagueType END ASC,
+                        CASE WHEN p_sortOrder = 'DESC' THEN l.leagueType END DESC;
+                
+                WHEN 'maxTeams' THEN
+                    SELECT l.*, t.teamID, t.teamName, t.totalPoints, t.ranking
+                    FROM league l
+                    LEFT JOIN team t ON l.leagueID = t.leagueID
+                    WHERE l.commissioner = p_userID OR t.owner = p_userID
+                    ORDER BY 
+                        CASE WHEN p_sortOrder = 'ASC' THEN l.maxTeams END ASC,
+                        CASE WHEN p_sortOrder = 'DESC' THEN l.maxTeams END DESC;
+                
+                WHEN 'draftDate' THEN
+                    SELECT l.*, t.teamID, t.teamName, t.totalPoints, t.ranking
+                    FROM league l
+                    LEFT JOIN team t ON l.leagueID = t.leagueID
+                    WHERE l.commissioner = p_userID OR t.owner = p_userID
+                    ORDER BY 
+                        CASE WHEN p_sortOrder = 'ASC' THEN l.draftDate END ASC,
+                        CASE WHEN p_sortOrder = 'DESC' THEN l.draftDate END DESC;
+                
+                ELSE
+                    SELECT l.*, t.teamID, t.teamName, t.totalPoints, t.ranking
+                    FROM league l
+                    LEFT JOIN team t ON l.leagueID = t.leagueID
+                    WHERE l.commissioner = p_userID OR t.owner = p_userID;
+            END CASE;
+        END //
+        `
     ];
 
     for (const query of queries) {
