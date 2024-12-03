@@ -63,13 +63,13 @@ async function createTables(pool) {
             teamID INT AUTO_INCREMENT PRIMARY KEY, 
             teamName VARCHAR(25) NOT NULL,
             leagueID INT, 
-            draftID INT, -- NEW COLUMN
+            draftID INT,
             owner INT,
             totalPoints INT,
             ranking INT,
             status CHAR(1),
             FOREIGN KEY (leagueID) REFERENCES league(leagueID),
-            FOREIGN KEY (draftID) REFERENCES draft(draftID), -- OPTIONAL
+            FOREIGN KEY (draftID) REFERENCES draft(draftID),
             FOREIGN KEY (owner) REFERENCES users(userID)
         );`,
 
@@ -112,14 +112,13 @@ async function createTables(pool) {
         `CREATE TABLE IF NOT EXISTS draftedPlayers (
             draftID INT NOT NULL, 
             playerID INT NOT NULL, 
-            teamID INT NOT NULL, -- Add teamID
+            teamID INT NOT NULL,
             PRIMARY KEY (draftID, playerID),
             FOREIGN KEY (draftID) REFERENCES draft(draftID),
             FOREIGN KEY (playerID) REFERENCES player(playerID),
             FOREIGN KEY (teamID) REFERENCES team(teamID)
         );`,
         
-
         `CREATE TABLE IF NOT EXISTS draftTeams (
             draftID INT NOT NULL,
             teamID INT NOT NULL,
@@ -137,9 +136,28 @@ async function createTables(pool) {
             FOREIGN KEY (draftID) REFERENCES draft(draftID) ON DELETE CASCADE,
             FOREIGN KEY (teamID) REFERENCES team(teamID) ON DELETE CASCADE
         )`,
+    ];
 
-        `
-        CREATE OR REPLACE FUNCTION updateProfileSetting (
+    for (const query of queries) {
+        await new Promise((resolve, reject) => {
+            pool.query(query, (err, results) => {
+                if (err) {
+                    console.error(`Error creating table: ${err.message}`);
+                    reject(err);
+                } else {
+                    console.log('Table ensured:', query.split(' ')[2]);
+                    resolve(results);
+                }
+            });
+        });
+    }
+}
+
+// Function to create `updateProfileSetting` safely
+async function createFunction(pool) {
+    const dropFunctionQuery = `DROP FUNCTION IF EXISTS updateProfileSetting;`;
+    const functionQuery = `
+        CREATE FUNCTION updateProfileSetting (
             thisUserID INT,
             favoriteSport VARCHAR(255),
             newAbout VARCHAR(255)
@@ -155,36 +173,30 @@ async function createTables(pool) {
 
             RETURN 'ProfileSetting updated successfully!';
         END;
-        `,
+    `;
 
-        `
-        CREATE OR REPLACE TRIGGER delete_inactive_teams_before_user_delete
+    await pool.promise().query(dropFunctionQuery);
+    await pool.promise().query(functionQuery);
+}
+
+// Function to create trigger safely
+async function createTrigger(pool) {
+    const dropTriggerQuery = `DROP TRIGGER IF EXISTS delete_inactive_teams_before_user_delete;`;
+    const triggerQuery = `
+        CREATE TRIGGER delete_inactive_teams_before_user_delete
         BEFORE DELETE ON users
         FOR EACH ROW
         BEGIN
             DELETE FROM team
             WHERE status = 'I';
-        END;`
-        
+        END;
+    `;
 
-    ];
-
-    for (const query of queries) {
-        await new Promise((resolve, reject) => {
-            pool.query(query, (err, results) => {
-                if (err) {
-                    console.error(`Error creating table: ${err.message}`);
-                    reject(err);
-                } else {
-                    console.log('Table ensured:', query.split(' ')[2]); // Log the table name
-                    resolve(results);
-                }
-            });
-        });
-    }
+    await pool.promise().query(dropTriggerQuery);
+    await pool.promise().query(triggerQuery);
 }
 
-// Function to ensure the database exists and initialize tables
+// Initialize the database
 async function initializeDatabase(pool) {
     const connection = mysql.createConnection({
         host: process.env.DB_HOST,
@@ -199,9 +211,11 @@ async function initializeDatabase(pool) {
                 reject(err);
             } else {
                 console.log(`Database ${process.env.DB_NAME} is ready.`);
-                connection.end(); // Close the temporary connection
+                connection.end();
                 try {
                     await createTables(pool);
+                    await createFunction(pool);
+                    await createTrigger(pool);
                     resolve();
                 } catch (err) {
                     reject(err);
