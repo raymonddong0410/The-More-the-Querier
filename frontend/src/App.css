@@ -133,3 +133,14 @@ body {
   padding-right: .5em;
   
 }
+
+button {
+  background-color: #646cff;
+  color: #000000;
+  border: none;
+  padding: 1em 2em;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
