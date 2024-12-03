@@ -6,16 +6,11 @@
 }
 
 body {
-  background-color: #ffffff; /* light background */
-  color: #000000; /* dark text */
+  background-color: #121212; 
+  color: #ffffff; 
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #121212; 
-    color: #ffffff; 
-  }
-}
+
 
 
 .logo {
